@@ -3,8 +3,8 @@
 ## Estado atual
 
 - **Data:** 17/10/2026
-- **Fase:** Fase 1 - ingestão, congelamento, regras por base e pilotos de infraestrutura concluídos; features e avaliação final pendentes.
-- **Situação:** em andamento. As cinco bases foram recebidas, a preparação estrutural, as regras específicas e os notebooks 01–05 foram executados. Ainda não há avaliação final nem modelo comparado por MAE.
+- **Fase:** Fase 1 - ingestão, congelamento, tratamento, diagnósticos e pilotos de infraestrutura concluídos; features e avaliação final pendentes.
+- **Situação:** em andamento. As cinco bases receberam CSVs `cleaned`, ACF e STL; os 20 notebooks de treinamento individual também foram executados. Ainda não há avaliação final nem modelo comparado por MAE.
 - **Repositório local:** criado a partir de `MayumiCastiglioni/DiscoverySeriesTemporais`, originalmente vazio.
 - **Git:** o último estado publicado antes desta continuação foi `ce3c9c4` no branch `main`. Para o commit atualmente publicado, consultar `git log --oneline -1`.
 - **Descrição do repositório:** atualizada para refletir a comparação reprodutível de modelos com validação walk-forward.
@@ -25,8 +25,10 @@
 - Configuração por base em `configs/base_experiment_rules.json`: granularidade, corte temporal e semente foram fornecidos pelo grupo e são lidos pelos adaptadores.
 - Transformações confirmadas: Base 4 por média horária válida; Base 5 por último preço semanal em sexta-feira; Base 2 consolida o alvo depois de comprovar que as repetições não divergem.
 - Adaptadores-piloto de SARIMAX, Holt-Winters, Random Forest e XGBoost em `src/discovery_series_temporais/model_pilots.py`. Os quatro foram executados em uma origem comum por base; o artefato ignorado pelo Git é `reports/generated/model_pilots/shared_origin_model_pilots.csv`.
-- `notebooks/01_auditoria_e_stl_preliminar.ipynb` a `05_avaliacao_walk_forward_final.ipynb` executados em kernel limpo, sem erro. A STL foi feita somente na Base 1; todos os modelos permanecem pilotos, não resultados finais.
+- Os notebooks iniciais `01_auditoria_e_stl_preliminar.ipynb` a `05_avaliacao_walk_forward_final.ipynb` permanecem como material de apoio. A execução principal agora ocorre por base e por modelo; todos os resultados continuam pilotos, não resultados finais.
 - O notebook 05 aceita `HORIZON_STEPS_BY_BASE` para pré-visualizar as origens de um horizonte candidato sem liberar MAE; o guia `docs/EXECUCAO_MANUAL.md` registra a execução local segura.
+- Cinco notebooks em `notebooks/bases` criam os CSVs `cleaned` e os diagnósticos ACF/STL. Para a Base 5, 254 lacunas são interpoladas somente em uma cópia diagnóstica da STL; os dados de modelagem preservam as lacunas.
+- Vinte notebooks em `notebooks/modelos` executaram individualmente SARIMAX, Holt-Winters, Random Forest e XGBoost em cada base. `scripts/verify_training_pilots.py` comprovou a origem comum para os quatro modelos de cada base.
 
 ## Requisitos confirmados do enunciado
 

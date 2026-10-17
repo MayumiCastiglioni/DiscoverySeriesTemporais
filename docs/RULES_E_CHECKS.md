@@ -51,6 +51,9 @@ Estas regras transformam os requisitos acadêmicos em verificações repetíveis
 - [x] O teste automatizado rejeita uma agenda de um modelo que tenha uma origem removida ou reordenada.
 - [x] SARIMAX, Holt-Winters, Random Forest e XGBoost executaram um piloto na mesma `origin_id` por base.
 - [x] Os pilotos foram identificados como não finais; não há MAE, ranking ou escolha de vencedor registrada.
+- [x] Cinco CSVs `cleaned` foram gerados em saídas separadas dos brutos congelados, com regras por base documentadas.
+- [x] Cada base teve ACF e STL geradas; qualquer interpolação diagnóstica foi separada do CSV de modelagem.
+- [x] Vinte notebooks de treinamento foram executados e a verificação confirmou a mesma origem entre os quatro modelos em cada base.
 
 Para repetir os checks automatizados a partir da raiz, use `python scripts/run_checks.py`.
 

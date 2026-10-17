@@ -21,11 +21,11 @@ Esta é a sequência reproduzível. Ela não altera os arquivos em `data/raw`.
 
 ```powershell
 python scripts/prepare_structural_data.py
-python scripts/profile_candidate_series.py
-python scripts/build_target_only_origins.py
-python scripts/run_model_pilots.py
+python scripts/build_cleaned_data.py
+python scripts/generate_course_notebooks.py
 python scripts/run_checks.py
 python scripts/execute_notebooks.py
+python scripts/verify_training_pilots.py
 ```
 
 Os arquivos gerados ficam em `reports/generated` e podem ser reconstruídos a qualquer momento.
@@ -38,12 +38,8 @@ Abra a interface de notebooks com:
 jupyter lab
 ```
 
-Execute os notebooks na ordem numérica, usando **Run All Cells** em cada um:
+Execute primeiro os cinco notebooks de `notebooks/bases`, usando **Run All Cells** em cada um. Eles criam `base1_cleaned.csv` a `base5_cleaned.csv`, ACF e STL. Depois, execute os vinte notebooks de `notebooks/modelos`, também em ordem numérica. Cada um corresponde a uma combinação base-modelo e grava um piloto em `reports/generated/training_notebooks`.
 
-1. `01_auditoria_e_stl_preliminar.ipynb`
-2. `02_origens_e_xgboost_piloto.ipynb`
-3. `03_regras_e_preparacao_por_grupo.ipynb`
-4. `04_pilotos_dos_quatro_modelos.ipynb`
-5. `05_avaliacao_walk_forward_final.ipynb`
+Ao concluir os vinte, rode `python scripts/verify_training_pilots.py`. Ele confirma que os quatro modelos de cada base receberam a mesma origem de previsão.
 
 O notebook 05 contém `HORIZON_STEPS_BY_BASE`. Cada número é contado na granularidade da própria base: uma etapa representa um dia na Base 1, uma hora nas Bases 2–4 e uma semana encerrada na sexta-feira na Base 5. A célula mostra como a escolha muda as origens e os alvos, mas `HORIZON_APPROVED` começa como `False`; portanto, não use esse notebook para gerar MAE ou ranking final antes de uma decisão metodológica aprovada.

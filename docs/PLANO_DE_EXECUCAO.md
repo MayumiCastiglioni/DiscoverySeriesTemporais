@@ -2,7 +2,7 @@
 
 ## Estado atual
 
-A configuração de granularidade, semente e divisão temporal foi registrada para as cinco bases. Os quatro adaptadores de modelos existem e são executados em um piloto de origem compartilhada. O resultado final ainda depende do horizonte de previsão e da aprovação de disponibilidade das variáveis externas.
+A configuração de granularidade, semente e divisão temporal foi registrada para as cinco bases. Os cinco tratamentos, ACFs e STLs foram executados em notebooks separados; os vinte notebooks de treinamento piloto também foram executados. O resultado final ainda depende do horizonte de previsão e da aprovação de disponibilidade das variáveis externas.
 
 ## Etapas
 
@@ -20,11 +20,11 @@ A configuração de granularidade, semente e divisão temporal foi registrada pa
 
 | Notebook | Papel | Situação |
 | --- | --- | --- |
-| `01_auditoria_e_stl_preliminar.ipynb` | Auditoria e STL onde a série já está regular. | Executável; STL completa das demais bases depende da etapa 1. |
-| `02_origens_e_xgboost_piloto.ipynb` | Agenda de origens e piloto de XGBoost. | Executável; não calcula MAE final. |
-| `03_regras_e_preparacao_por_grupo.ipynb` | Verifica configurações, granularidades e divisões específicas. | Executável. |
-| `04_pilotos_dos_quatro_modelos.ipynb` | Executa SARIMAX, Holt-Winters, Random Forest e XGBoost na mesma origem piloto. | Executável; não é comparação final. |
-| `05_avaliacao_walk_forward_final.ipynb` | Mostra o efeito de `HORIZON_STEPS_BY_BASE` sobre as origens e orquestra a avaliação final depois da definição de horizonte e features. | Preparado; a prévia não gera MAE e a avaliação permanece bloqueada enquanto essas decisões não existirem. |
+| `notebooks/bases/base01` a `base05` | Uma exploração, tratamento, ACF e STL por base. | Executados; cada um produz o respectivo CSV `cleaned`. |
+| `notebooks/modelos/01` a `20` | Um treinamento piloto para cada combinação base-modelo. | Executados; são 20 notebooks e não geram MAE final. |
+| `05_avaliacao_walk_forward_final.ipynb` | Mostra o efeito de `HORIZON_STEPS_BY_BASE` e reserva a avaliação final. | Preparado; a prévia não gera MAE e a avaliação permanece bloqueada enquanto essas decisões não existirem. |
+
+As relações de tratamento, períodos de STL e limites de ACF estão em `docs/TRATAMENTO_E_DIAGNOSTICOS_POR_BASE.md`.
 
 ## Próxima decisão necessária
 

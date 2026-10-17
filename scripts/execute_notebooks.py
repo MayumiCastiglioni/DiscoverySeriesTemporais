@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import nbformat
@@ -9,25 +10,39 @@ from nbclient import NotebookClient
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOKS = (
-    PROJECT_ROOT / "notebooks" / "01_auditoria_e_stl_preliminar.ipynb",
-    PROJECT_ROOT / "notebooks" / "02_origens_e_xgboost_piloto.ipynb",
-    PROJECT_ROOT / "notebooks" / "03_regras_e_preparacao_por_grupo.ipynb",
-    PROJECT_ROOT / "notebooks" / "04_pilotos_dos_quatro_modelos.ipynb",
-    PROJECT_ROOT / "notebooks" / "05_avaliacao_walk_forward_final.ipynb",
-)
+BASE_NOTEBOOKS = tuple(sorted((PROJECT_ROOT / "notebooks" / "bases").glob("*.ipynb")))
+MODEL_NOTEBOOKS = tuple(sorted((PROJECT_ROOT / "notebooks" / "modelos").glob("*.ipynb")))
+NOTEBOOKS = BASE_NOTEBOOKS + MODEL_NOTEBOOKS
 
 
 def execute_notebook(path: Path) -> None:
     notebook = nbformat.read(path, as_version=4)
-    client = NotebookClient(notebook, timeout=180, kernel_name="python3")
+    client = NotebookClient(notebook, timeout=600, kernel_name="python3")
     client.execute(cwd=str(PROJECT_ROOT))
     nbformat.write(notebook, path)
     print(f"Executed successfully: {path.relative_to(PROJECT_ROOT)}")
 
 
 def main() -> None:
-    for notebook_path in NOTEBOOKS:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--notebook",
+        action="append",
+        help="Repository-relative notebook path. Repeat to execute selected notebooks only.",
+    )
+    args = parser.parse_args()
+    if args.notebook:
+        notebook_paths = tuple(PROJECT_ROOT / Path(path) for path in args.notebook)
+    else:
+        notebook_paths = NOTEBOOKS
+    if not args.notebook and (len(BASE_NOTEBOOKS) != 5 or len(MODEL_NOTEBOOKS) != 20):
+        raise ValueError(
+            "Expected five base notebooks and twenty model-training notebooks. "
+            "Run scripts/generate_course_notebooks.py first."
+        )
+    for notebook_path in notebook_paths:
+        if not notebook_path.exists():
+            raise FileNotFoundError(f"Notebook not found: {notebook_path}")
         execute_notebook(notebook_path)
 
 

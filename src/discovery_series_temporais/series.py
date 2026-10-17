@@ -142,6 +142,46 @@ def load_candidate_target(
     raise ValueError(f"Unsupported base: {base_id}. Expected an integer from 1 to 5.")
 
 
+def load_cleaned_candidate_target(
+    base_id: int,
+    processed_dir: Path = Path("data/processed"),
+    rules_path: Path = DEFAULT_RULES_PATH,
+) -> CandidateTarget:
+    """Load the target from a base-specific cleaned dataset for model notebooks."""
+    source = processed_dir / f"base{base_id}_cleaned.csv"
+    if not source.exists():
+        raise FileNotFoundError(
+            f"Cleaned input not found: {source}. Run the matching base notebook first."
+        )
+    target = pd.read_csv(source, parse_dates=["timestamp"])[["timestamp", "target"]]
+    rule = get_experiment_rule(base_id, rules_path)
+    deltas = {
+        1: pd.Timedelta(days=1),
+        2: pd.Timedelta(hours=1),
+        3: pd.Timedelta(hours=1),
+        4: pd.Timedelta(hours=1),
+        5: pd.Timedelta(days=7),
+    }
+    labels = {
+        1: "daily cleaned",
+        2: "hourly cleaned",
+        3: "hourly cleaned",
+        4: "hourly cleaned mean",
+        5: "weekly Friday-ended cleaned",
+    }
+    if base_id not in deltas:
+        raise ValueError(f"Unsupported base: {base_id}. Expected an integer from 1 to 5.")
+    return CandidateTarget(
+        base_id,
+        "target",
+        _validate_target_frame(target, base_id),
+        labels[base_id] + f" ({rule.granularity})",
+        deltas[base_id],
+        rule.test_fraction,
+        rule.random_state,
+    )
+
+
 def _normalize_eligibility_mask(
     target_frame: pd.DataFrame, eligibility_mask: Iterable[bool] | None
 ) -> pd.Series:

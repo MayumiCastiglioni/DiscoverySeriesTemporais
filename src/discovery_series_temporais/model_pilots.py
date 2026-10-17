@@ -80,41 +80,61 @@ def _forecast_random_forest(candidate: CandidateTarget, origin_timestamp: pd.Tim
     return float(estimator.predict(prediction_row[feature_columns])[0]), int(len(train))
 
 
-def run_all_model_pilots(candidate: CandidateTarget, canonical_schedule: pd.DataFrame) -> pd.DataFrame:
-    """Run all four models on the same first canonical origin and validate it."""
+def run_model_pilot(
+    candidate: CandidateTarget, canonical_schedule: pd.DataFrame, model_name: str
+) -> pd.DataFrame:
+    """Run exactly one model on the first shared pilot origin for a base."""
+    if model_name not in {"sarimax", "holt_winters", "random_forest", "xgboost"}:
+        raise ValueError(f"Unsupported model pilot: {model_name}.")
     pilot_schedule = _pilot_schedule(canonical_schedule)
+    if not pilot_schedule["horizon_steps"].eq(1).all():
+        raise ValueError("The model pilots support only the provisional one-step horizon.")
     origin = pilot_schedule.iloc[0]
     history = _history_until_origin(candidate, int(origin["origin_position"]))
     actual = float(candidate.data.iloc[int(origin["target_position"])]["target"])
     origin_timestamp = pd.Timestamp(origin["origin_timestamp"])
 
-    random_forest_prediction, random_forest_rows = _forecast_random_forest(candidate, origin_timestamp)
-    xgboost_result = run_xgboost_pilot(candidate, pilot_schedule)
-    predictions = {
-        "sarimax": (_forecast_sarimax(history), int(len(history))),
-        "holt_winters": (_forecast_holt_winters(history), int(len(history))),
-        "random_forest": (random_forest_prediction, random_forest_rows),
-        "xgboost": (float(xgboost_result["prediction"]), int(xgboost_result["training_rows"])),
-    }
+    if model_name == "sarimax":
+        prediction, training_rows = _forecast_sarimax(history), int(len(history))
+    elif model_name == "holt_winters":
+        prediction, training_rows = _forecast_holt_winters(history), int(len(history))
+    elif model_name == "random_forest":
+        prediction, training_rows = _forecast_random_forest(candidate, origin_timestamp)
+    else:
+        xgboost_result = run_xgboost_pilot(candidate, pilot_schedule)
+        prediction = float(xgboost_result["prediction"])
+        training_rows = int(xgboost_result["training_rows"])
 
-    records = []
-    for model_name, (prediction, training_rows) in predictions.items():
-        record = {column: origin[column] for column in ORIGIN_COLUMNS}
-        record.update(
-            {
-                "model": model_name,
-                "prediction": prediction,
-                "actual": actual,
-                "absolute_error": abs(prediction - actual),
-                "training_rows": training_rows,
-                "random_state": candidate.random_state if model_name in {"random_forest", "xgboost"} else None,
-                "scope": "single shared-origin pilot; not a final walk-forward or MAE result",
-            }
-        )
-        records.append(record)
-    result = pd.DataFrame(records)
+    record = {column: origin[column] for column in ORIGIN_COLUMNS}
+    record.update(
+        {
+            "model": model_name,
+            "prediction": prediction,
+            "actual": actual,
+            "absolute_error": abs(prediction - actual),
+            "training_rows": training_rows,
+            "random_state": candidate.random_state if model_name in {"random_forest", "xgboost"} else None,
+            "scope": "single shared-origin pilot; not a final walk-forward or MAE result",
+        }
+    )
+    result = pd.DataFrame([record])
+    if not result[ORIGIN_COLUMNS].reset_index(drop=True).equals(
+        pilot_schedule[ORIGIN_COLUMNS].reset_index(drop=True)
+    ):
+        raise ValueError(f"{model_name}: pilot prediction does not preserve its shared origin.")
+    return result
+
+
+def run_all_model_pilots(candidate: CandidateTarget, canonical_schedule: pd.DataFrame) -> pd.DataFrame:
+    """Run all four models on the same first canonical origin and validate it."""
+    pilot_schedule = _pilot_schedule(canonical_schedule)
+    model_names = ("sarimax", "holt_winters", "random_forest", "xgboost")
+    result = pd.concat(
+        [run_model_pilot(candidate, canonical_schedule, model_name) for model_name in model_names],
+        ignore_index=True,
+    )
     assert_same_origins(
-        {model: result.loc[result["model"].eq(model), ORIGIN_COLUMNS] for model in predictions},
+        {model: result.loc[result["model"].eq(model), ORIGIN_COLUMNS] for model in model_names},
         pilot_schedule,
     )
     return result

@@ -60,4 +60,4 @@ Após a definição do horizonte e das variáveis externas permitidas, gerar gr�
 
 O notebook `notebooks/01_auditoria_e_stl_preliminar.ipynb` foi executado em kernel limpo. A Base 1, que é a única série já diária, completa e regular, recebeu STL robusta com período semanal (`7`). A força sazonal semanal calculada pela razão de variâncias foi `0,000000` após o limite inferior em zero. Esse resultado não confirma sazonalidade semanal e não autoriza concluir que a série não tenha outros ciclos; a escolha do período final continuará condicionada ao protocolo aprovado.
 
-As Bases 2 a 5 não receberam STL nesta execução porque ainda há uma decisão pendente que mudaria a série analisada: agregação e lacunas na Base 2, ausências no alvo da Base 3, agregação horária na Base 4 e calendário de negociação na Base 5.
+Esse registro descreve a execução inicial, anterior ao tratamento por base. A execução atual está nos cinco notebooks de `notebooks/bases`, que geraram ACF e STL para todas as bases após as regras de granularidade serem registradas. Consulte `docs/TRATAMENTO_E_DIAGNOSTICOS_POR_BASE.md` para as séries e precauções usadas nos diagnósticos atuais.
