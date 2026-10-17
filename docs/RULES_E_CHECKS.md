@@ -1,0 +1,57 @@
+# Regras e checks de qualidade
+
+Estas regras transformam os requisitos acadêmicos em verificações repetíveis. Aplicar o bloco pertinente antes de fechar cada fase.
+
+## Regras inegociáveis
+
+1. **Sem vazamento temporal.** Nenhuma feature, transformação, escalonamento, imputação, seleção ou ajuste pode usar observações posteriores à origem da previsão.
+2. **Bases congeladas.** A análise usa exatamente a versão documentada de cada base. Atualizações criam uma nova versão e exigem nova decisão de escopo.
+3. **Comparação justa.** Os quatro modelos de uma base usam o mesmo horizonte, as mesmas origens de previsão e o mesmo teste final. Holt-Winters permanece univariado.
+4. **Teste final intocado.** A otimização ocorre antes da avaliação final; hiperparâmetros são fixados para o walk-forward final.
+5. **MAE por base.** É proibido somar ou tirar média de MAEs de bases em escalas diferentes. Comparar posição, vitórias e resultados dentro de cada base.
+6. **Rastreabilidade.** Toda tabela, gráfico, previsão e conclusão deve apontar para uma execução identificável, dados de origem e configuração.
+7. **Sem conclusões sem evidência.** Interpretações devem registrar métrica, gráfico, teste ou método que as sustente.
+
+## Check de entrada de dados
+
+- [ ] Fonte, licença ou referência, versão/data de obtenção, período, frequência e unidade estão documentados.
+- [ ] A variável-alvo é numérica e possui chave temporal sem duplicidades.
+- [ ] Ausências, lacunas, irregularidades, duplicidades e outliers foram medidos e tratados ou justificados.
+- [ ] Pelo menos duas variáveis externas foram catalogadas, quando previsto no enunciado.
+- [ ] Cada variável externa foi classificada como conhecida antecipadamente, previsão disponível na origem, somente observada no futuro ou excluída.
+- [ ] A versão bruta foi preservada sem alterações.
+
+## Check de análise e features
+
+- [ ] A STL utiliza período sazonal coerente com a frequência.
+- [ ] Tendência, sazonalidade, resíduos e força sazonal foram interpretados por base.
+- [ ] Lags e janelas foram calculados sem acessar valores futuros.
+- [ ] Features de calendário usam apenas informação disponível na origem.
+- [ ] Linhas perdidas por lags/janelas foram contabilizadas e justificadas.
+- [ ] O mesmo conjunto de features é usado por Random Forest e modelo de especialização quando compatível.
+
+## Check de validação e modelagem
+
+- [ ] A divisão respeita a ordem temporal e separa um teste final.
+- [ ] O walk-forward parte apenas do histórico disponível e atualiza o histórico entre origens.
+- [ ] Todos os modelos usam as mesmas origens e o mesmo horizonte na mesma base.
+- [ ] Hiperparâmetros foram escolhidos sem consultar o teste final e o processo foi registrado.
+- [ ] SARIMAX considera ordens e sazonalidade; Holt-Winters considera componentes e período; Random Forest registra sua busca; o modelo de especialização documenta a busca apropriada.
+- [ ] Sementes, versões de bibliotecas, duração, parâmetros e identificador da execução foram registrados.
+
+## Check de resultados e interpretação
+
+- [ ] Previsões fora da amostra e resíduos foram preservados por base e modelo.
+- [ ] MAE foi calculado sobre as previsões walk-forward fora da amostra.
+- [ ] Há ranking de MAE e vencedor dentro de cada base, além de vitórias e posição média por modelo.
+- [ ] Resíduos foram avaliados com gráfico temporal, ACF, Ljung-Box e interpretação do p-valor.
+- [ ] SARIMAX interpreta coeficientes externos; Holt-Winters interpreta nível, tendência e sazonalidade; Random Forest e o modelo de especialização usam método de importância compatível.
+- [ ] Limitações, incertezas e possíveis padrões residuais foram explicitados.
+
+## Check de entrega
+
+- [ ] O HTML paginado e o PDF possuem o mesmo conteúdo e foram inspecionados visualmente.
+- [ ] O relatório inclui narrativa, fontes, decisões metodológicas, resultados, limitações e referências.
+- [ ] O projeto pode ser reexecutado do zero a partir dos materiais entregues.
+- [ ] O pacote contém código organizado, bases ou fontes claras, resultados consolidados de MAE, relatórios e arquivos-fonte exigidos.
+- [ ] O material de divisão de demandas foi anexado somente se entregue e aprovado pelo grupo.
