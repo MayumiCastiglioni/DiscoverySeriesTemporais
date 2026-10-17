@@ -17,6 +17,8 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
+from .experiment_config import DEFAULT_RULES_PATH, get_experiment_rule
+
 
 MODEL_NAMES = ("sarimax", "holt_winters", "random_forest", "xgboost")
 ORIGIN_COLUMNS = [
@@ -38,6 +40,8 @@ class CandidateTarget:
     data: pd.DataFrame
     frequency_label: str
     required_horizon_delta: pd.Timedelta | None
+    test_fraction: float = 0.20
+    random_state: int = 42
 
 
 def _validate_target_frame(frame: pd.DataFrame, base_id: int) -> pd.DataFrame:
@@ -54,16 +58,24 @@ def _validate_target_frame(frame: pd.DataFrame, base_id: int) -> pd.DataFrame:
     return normalized
 
 
-def load_candidate_target(base_id: int, processed_dir: Path = Path("data/processed")) -> CandidateTarget:
+def load_candidate_target(
+    base_id: int,
+    processed_dir: Path = Path("data/processed"),
+    rules_path: Path = DEFAULT_RULES_PATH,
+) -> CandidateTarget:
     """Load one target candidate without creating features or imputing values."""
     source = processed_dir / f"base{base_id}_structural.csv"
     if not source.exists():
         raise FileNotFoundError(f"Structural input not found: {source}")
     frame = pd.read_csv(source, parse_dates=["timestamp"])
+    rule = get_experiment_rule(base_id, rules_path)
 
     if base_id == 1:
         target = frame[["timestamp", "Close"]].rename(columns={"Close": "target"})
-        return CandidateTarget(1, "Close", _validate_target_frame(target, 1), "daily", pd.Timedelta(days=1))
+        return CandidateTarget(
+            1, "Close", _validate_target_frame(target, 1), rule.granularity,
+            pd.Timedelta(days=1), rule.test_fraction, rule.random_state,
+        )
 
     if base_id == 2:
         target_counts = frame.groupby("timestamp")["traffic_volume"].nunique(dropna=False)
@@ -78,13 +90,18 @@ def load_candidate_target(base_id: int, processed_dir: Path = Path("data/process
             2,
             "traffic_volume",
             _validate_target_frame(target, 2),
-            "hourly (target-only consolidation)",
+            rule.granularity + " (target-only consolidation)",
             pd.Timedelta(hours=1),
+            rule.test_fraction,
+            rule.random_state,
         )
 
     if base_id == 3:
         target = frame[["timestamp", "PM2.5"]].rename(columns={"PM2.5": "target"})
-        return CandidateTarget(3, "PM2.5", _validate_target_frame(target, 3), "hourly", pd.Timedelta(hours=1))
+        return CandidateTarget(
+            3, "PM2.5", _validate_target_frame(target, 3), rule.granularity,
+            pd.Timedelta(hours=1), rule.test_fraction, rule.random_state,
+        )
 
     if base_id == 4:
         target = (
@@ -98,18 +115,28 @@ def load_candidate_target(base_id: int, processed_dir: Path = Path("data/process
             4,
             "T (degC)",
             _validate_target_frame(target, 4),
-            "hourly mean (exploratory)",
+            rule.granularity + " mean",
             pd.Timedelta(hours=1),
+            rule.test_fraction,
+            rule.random_state,
         )
 
     if base_id == 5:
-        target = frame[["timestamp", "GOLD_PRICE"]].rename(columns={"GOLD_PRICE": "target"})
+        target = (
+            frame.set_index("timestamp")["GOLD_PRICE"]
+            .resample("W-FRI")
+            .last()
+            .rename("target")
+            .reset_index()
+        )
         return CandidateTarget(
             5,
             "GOLD_PRICE",
             _validate_target_frame(target, 5),
-            "next trading observation",
-            None,
+            rule.granularity + " using last observed price",
+            pd.Timedelta(days=7),
+            rule.test_fraction,
+            rule.random_state,
         )
 
     raise ValueError(f"Unsupported base: {base_id}. Expected an integer from 1 to 5.")
@@ -134,7 +161,7 @@ def _schedule_signature(schedule: pd.DataFrame) -> str:
 def build_origin_schedule(
     candidate: CandidateTarget,
     horizon_steps: int = 1,
-    test_fraction: float = 0.20,
+    test_fraction: float | None = None,
     eligibility_mask: Iterable[bool] | None = None,
 ) -> pd.DataFrame:
     """Build the final-test origins once, before a model receives the schedule.
@@ -146,6 +173,8 @@ def build_origin_schedule(
     """
     if horizon_steps != 1:
         raise ValueError("Only the proposed one-step horizon is implemented at this stage.")
+    if test_fraction is None:
+        test_fraction = candidate.test_fraction
     if not 0 < test_fraction < 1:
         raise ValueError("test_fraction must be strictly between zero and one.")
 
@@ -229,13 +258,15 @@ def assert_same_origins(
 
 
 def write_target_only_origin_artifacts(
-    processed_dir: Path = Path("data/processed"), output_dir: Path = Path("reports/generated/origin_schedules")
+    processed_dir: Path = Path("data/processed"),
+    output_dir: Path = Path("reports/generated/origin_schedules"),
+    rules_path: Path = DEFAULT_RULES_PATH,
 ) -> pd.DataFrame:
     """Write provisional target-only schedules and an audit summary for all bases."""
     output_dir.mkdir(parents=True, exist_ok=True)
     summaries = []
     for base_id in range(1, 6):
-        candidate = load_candidate_target(base_id, processed_dir)
+        candidate = load_candidate_target(base_id, processed_dir, rules_path)
         schedule = build_origin_schedule(candidate)
         destination = output_dir / f"base{base_id}_h1_target_only.csv"
         schedule.to_csv(destination, index=False)
@@ -245,6 +276,9 @@ def write_target_only_origin_artifacts(
                 "base_id": base_id,
                 "target": candidate.target_name,
                 "frequency_interpretation": candidate.frequency_label,
+                "random_state": candidate.random_state,
+                "train_fraction": 1 - candidate.test_fraction,
+                "test_fraction": candidate.test_fraction,
                 "origin_count": check["origin_count"],
                 "first_origin": schedule["origin_timestamp"].min().isoformat(),
                 "last_origin": schedule["origin_timestamp"].max().isoformat(),

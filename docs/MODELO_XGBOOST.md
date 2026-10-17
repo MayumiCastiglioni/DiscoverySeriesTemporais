@@ -16,9 +16,9 @@ XGBoost constrói um conjunto sequencial de árvores de decisão. Cada nova árv
 
 ## Piloto já preparado
 
-`src/discovery_series_temporais/xgboost_model.py` cria um desenho supervisionado de uma etapa à frente usando somente `target_lag_0`, `target_lag_1`, `target_lag_2` e `target_lag_7`. O notebook de execução faz um ajuste único anterior à primeira origem de teste para verificar o ambiente e a integração com a agenda.
+`src/discovery_series_temporais/xgboost_model.py` cria um desenho supervisionado de uma etapa à frente usando somente `target_lag_0`, `target_lag_1`, `target_lag_2` e `target_lag_7`. O notebook de execução faz um ajuste único anterior à primeira origem de teste para verificar o ambiente e a integração com a agenda. A semente segue a configuração por base: 42 nas Bases 1, 3, 4 e 5; 67 na Base 2.
 
-Os parâmetros desse piloto (`n_estimators=50`, profundidade 3, `learning_rate=0,05` e semente 42) **não são hiperparâmetros finais**. Ele não produz MAE final, ranking nem conclusão sobre desempenho. A escolha final será feita apenas pela busca temporal interna, depois da aprovação das features e do horizonte.
+Os parâmetros desse piloto (`n_estimators=50`, profundidade 3, `learning_rate=0,05` e a semente da base) **não são hiperparâmetros finais**. Ele não produz MAE final, ranking nem conclusão sobre desempenho. A escolha final será feita apenas pela busca temporal interna, depois da aprovação das features e do horizonte.
 
 ## Interpretação planejada
 

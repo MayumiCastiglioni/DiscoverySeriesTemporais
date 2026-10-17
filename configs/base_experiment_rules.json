@@ -1,0 +1,59 @@
+{
+  "status": "granularity, random state and train-test fractions confirmed by the group; final forecast horizon remains pending",
+  "common_comparison_rule": "Every final model receives the same approved-feature origin schedule for a base, in the same order.",
+  "pilot_horizon_steps": 1,
+  "bases": [
+    {
+      "base_id": 1,
+      "group": "Grupo 1",
+      "source_url": "https://www.bitget.com/price/bitcoin/historical-data",
+      "granularity": "daily",
+      "random_state": 42,
+      "train_fraction": 0.7,
+      "test_fraction": 0.3,
+      "target_rule": "Close at daily cadence"
+    },
+    {
+      "base_id": 2,
+      "group": "Grupo 2",
+      "source_url": "https://archive.ics.uci.edu/dataset/492/metro+interstate+traffic+volume",
+      "granularity": "hourly",
+      "random_state": 67,
+      "train_fraction": 0.8,
+      "test_fraction": 0.2,
+      "target_rule": "One traffic_volume per clock hour; repeated target values are verified before consolidation"
+    },
+    {
+      "base_id": 3,
+      "group": "Grupo 3",
+      "source_url": "https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data",
+      "granularity": "hourly",
+      "random_state": 42,
+      "train_fraction": 0.8,
+      "test_fraction": 0.2,
+      "target_rule": "PM2.5 at hourly cadence; unobserved target values remain missing"
+    },
+    {
+      "base_id": 4,
+      "group": "Grupo 4",
+      "source_url": "https://www.kaggle.com/datasets/pankrzysiu/weather-archive-jena",
+      "granularity": "hourly",
+      "random_state": 42,
+      "train_fraction": 0.8,
+      "test_fraction": 0.2,
+      "target_rule": "Hourly mean of valid ten-minute T (degC) readings; hours without readings remain missing"
+    },
+    {
+      "base_id": 5,
+      "group": "Grupo 5",
+      "source_url": "https://github.com/TheoMGtech/pls-regration-comparation/tree/develop/bases/grupo5",
+      "original_source_url": "https://github.com/dengyishuo/quantitative-finance/blob/master/gold.daily.prices.csv",
+      "treatment_source_url": "https://github.com/TheoMGtech/pls-regration-comparation/tree/develop/bases/grupo5-tratamento",
+      "granularity": "weekly ending Friday",
+      "random_state": 42,
+      "train_fraction": 0.75,
+      "test_fraction": 0.25,
+      "target_rule": "Last observed GOLD_PRICE in each Friday-ended week; weeks without observations remain missing; precomputed columns are excluded"
+    }
+  ]
+}

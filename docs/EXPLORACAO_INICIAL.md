@@ -48,9 +48,13 @@ As correlações abaixo são descritivas, não comprovam estacionariedade e não
 - A Base 4 preserva a cadência de 10 minutos no dado estrutural. A média por hora é somente uma proposta para tornar a comparação e a decomposição mais manejáveis.
 - A Base 5 terá calendário e lags reconstruídos a partir da data e do alvo, descartando os campos pré-calculados recebidos.
 
+## Atualização de regras em 17/10/2026
+
+As regras recebidas depois desta exploração substituem as decisões provisórias de frequência: Bases 1–4 usam as cadências diária, horária, horária e horária; a Base 5 passa a uma série semanal encerrada na sexta-feira pelo último preço observado. As porcentagens de teste e sementes estão em `docs/REGRAS_POR_BASE.md`. Os números históricos desta página continuam úteis como auditoria do material bruto, mas não definem mais a série semanal da Base 5 nem os cortes de avaliação.
+
 ## Próximo artefato de exploração
 
-Após a aprovação das frequências e horizontes propostos, gerar gráficos de nível, sazonalidade e STL por base, com períodos escolhidos e justificados. O script acima poderá ser reexecutado para auditar que essa próxima etapa parte das mesmas entradas estruturais.
+Após a definição do horizonte e das variáveis externas permitidas, gerar gráficos de nível, sazonalidade e STL por base, com períodos escolhidos e justificados. O script acima poderá ser reexecutado para auditar que essa próxima etapa parte das mesmas entradas estruturais.
 
 ## Execução inicial de STL
 

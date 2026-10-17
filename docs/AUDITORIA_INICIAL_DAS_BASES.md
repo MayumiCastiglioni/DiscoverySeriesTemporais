@@ -16,7 +16,7 @@
 
 - Normalizar e ordenar o timestamp.
 - Manter a série íntegra. Não usar `Adj Close` como preditor porque ela é idêntica ao alvo proposto em todas as linhas.
-- Confirmar a fonte e a unidade antes da interpretação final.
+- A fonte Bitget foi designada pelo grupo; confirmar a unidade antes da interpretação final.
 
 ### Base 2
 
@@ -39,7 +39,7 @@
 
 ### Base 5
 
-- Trabalhar por dias observados de negociação, sem criar valores sintéticos em fins de semana ou feriados.
+- Reamostrar em semanas encerradas na sexta-feira usando o último preço observado, sem criar valores sintéticos para fim de semana ou feriado.
 - Não usar `TARGET` nem as features pré-calculadas. A comparação entre `TARGET` e o próximo `GOLD_PRICE` observado coincide em apenas 95,66% das linhas, logo a definição não é suficientemente confiável.
 - Reconstruir lags, médias móveis e calendário diretamente de `GOLD_PRICE` e `DATE` dentro da pipeline temporal.
 
@@ -49,4 +49,4 @@ A preparação estrutural reproduzível foi executada por `scripts/prepare_struc
 
 ## Próxima etapa técnica
 
-Confirmar a fonte e a semântica das variáveis para fechar a agregação da base 2, a política de ausências da base 3, a regularização da base 4 e o horizonte da base 5. Só então serão geradas features e definidos os cortes de walk-forward.
+As frequências, cortes e sementes já estão configurados. O próximo passo técnico depende de registrar o horizonte final e o catálogo de disponibilidade de variáveis externas; então serão geradas features, aplicada a máscara comum de elegibilidade e reconstruídas as agendas walk-forward.

@@ -6,12 +6,12 @@ O walk-forward mede uma previsão feita em uma origem temporal usando somente o 
 
 ## O que já foi implementado e executado
 
-O módulo `src/discovery_series_temporais/series.py` cria uma agenda canônica de origens antes da execução dos modelos. A rotina `scripts/build_target_only_origins.py` foi executada sobre as cinco bases estruturais com as opções provisórias abaixo:
+O módulo `src/discovery_series_temporais/series.py` cria uma agenda canônica de origens antes da execução dos modelos. A rotina `scripts/build_target_only_origins.py` usa as frações por grupo registradas em `configs/base_experiment_rules.json`.
 
 | Regra | Implementação atual |
 | --- | --- |
 | Horizonte | Uma etapa à frente (`h = 1`). |
-| Teste final | Últimos 20% das origens temporalmente válidas. O tamanho é arredondado para cima. |
+| Teste final | Última fração de origens temporalmente válidas definida pelo grupo: 30%, 20%, 20%, 20% e 25% nas Bases 1–5. O tamanho é arredondado para cima. |
 | Janela de treino | Expansiva: toda a história anterior à origem. |
 | Agenda | Um CSV por base em `reports/generated/origin_schedules`, ignorado pelo Git por ser produto reexecutável. |
 | Checagem | `assert_same_origins` exige que SARIMAX, Holt-Winters, Random Forest e XGBoost recebam exatamente a mesma agenda, na mesma ordem. |
@@ -22,11 +22,11 @@ Os testes automatizados verificam tanto a aceitação de agendas iguais quanto a
 
 | Base | Regra temporal aplicada à origem `t` | Origens provisórias no teste final |
 | --- | --- | ---: |
-| 1 | `target_timestamp = t + 1 dia` | 567 |
+| 1 | `target_timestamp = t + 1 dia` | 851 |
 | 2 | `target_timestamp = t + 1 hora`; lacunas de calendário são excluídas | 7.598 |
 | 3 | `target_timestamp = t + 1 hora`; origem ou alvo ausente é excluído | 6.786 |
-| 4 | Média horária exploratória e `target_timestamp = t + 1 hora`; horas sem observação são excluídas | 14.008 |
-| 5 | Próxima observação de negociação disponível | 1.973 |
+| 4 | Média horária de leituras válidas e `target_timestamp = t + 1 hora`; horas sem observação são excluídas | 14.008 |
+| 5 | Semana encerrada na sexta-feira; `target_timestamp = t + 7 dias`; semanas sem preço são excluídas | 481 |
 
 ## Fluxo final obrigatório
 
@@ -39,4 +39,4 @@ Os testes automatizados verificam tanto a aceitação de agendas iguais quanto a
 
 ## Limite da execução atual
 
-As agendas geradas agora são **provisórias e baseadas apenas no alvo**. Elas comprovam a infraestrutura temporal, a regra de lacunas e a igualdade de origens entre consumidores. Antes do resultado final, serão regeneradas a partir da interseção das features aprovadas para os quatro modelos. Assim, uma observação não será removida para apenas um modelo e a comparação continuará justa.
+As agendas geradas agora são **provisórias e baseadas apenas no alvo**, com horizonte-piloto de uma etapa. Elas comprovam a infraestrutura temporal, a regra de lacunas e a igualdade de origens entre consumidores. Antes do resultado final, o grupo precisa registrar o horizonte e as agendas serão regeneradas a partir da interseção das features aprovadas para os quatro modelos. Assim, uma observação não será removida para apenas um modelo e a comparação continuará justa.

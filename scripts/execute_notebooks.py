@@ -12,6 +12,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = (
     PROJECT_ROOT / "notebooks" / "01_auditoria_e_stl_preliminar.ipynb",
     PROJECT_ROOT / "notebooks" / "02_origens_e_xgboost_piloto.ipynb",
+    PROJECT_ROOT / "notebooks" / "03_regras_e_preparacao_por_grupo.ipynb",
+    PROJECT_ROOT / "notebooks" / "04_pilotos_dos_quatro_modelos.ipynb",
+    PROJECT_ROOT / "notebooks" / "05_avaliacao_walk_forward_final.ipynb",
 )
 
 

@@ -68,7 +68,7 @@ def run_xgboost_pilot(candidate: CandidateTarget, schedule: pd.DataFrame) -> dic
     if prediction_row[feature_columns].isna().any(axis=None):
         raise ValueError("The pilot origin lacks required lag values.")
 
-    settings = XGBoostPilotSettings()
+    settings = XGBoostPilotSettings(random_state=candidate.random_state)
     estimator = XGBRegressor(objective="reg:squarederror", tree_method="hist", **asdict(settings))
     estimator.fit(train[feature_columns], train["future_target"])
     prediction = float(estimator.predict(prediction_row[feature_columns])[0])

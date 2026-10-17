@@ -44,6 +44,16 @@ Estas regras transformam os requisitos acadêmicos em verificações repetíveis
 - [ ] SARIMAX considera ordens e sazonalidade; Holt-Winters considera componentes e período; Random Forest registra sua busca; o modelo de especialização documenta a busca apropriada.
 - [ ] Sementes, versões de bibliotecas, duração, parâmetros e identificador da execução foram registrados.
 
+## Checks já executados nesta etapa
+
+- [x] `configs/base_experiment_rules.json` contém exatamente as cinco bases, frações que somam 100% e sementes definidas.
+- [x] As agendas provisórias usam os cortes 70/30, 80/20, 80/20, 80/20 e 75/25 e rejeitam lacunas de calendário incompatíveis com o horizonte-piloto.
+- [x] O teste automatizado rejeita uma agenda de um modelo que tenha uma origem removida ou reordenada.
+- [x] SARIMAX, Holt-Winters, Random Forest e XGBoost executaram um piloto na mesma `origin_id` por base.
+- [x] Os pilotos foram identificados como não finais; não há MAE, ranking ou escolha de vencedor registrada.
+
+Para repetir os checks automatizados a partir da raiz, use `python scripts/run_checks.py`.
+
 ## Check de resultados e interpretação
 
 - [ ] Previsões fora da amostra e resíduos foram preservados por base e modelo.

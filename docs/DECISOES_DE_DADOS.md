@@ -6,7 +6,7 @@ O projeto utilizará a estrutura `data/raw`, `data/processed` e `data/features`.
 
 - `data/raw` contém cópias congeladas, byte a byte, dos arquivos recebidos. Os originais em `Downloads` não foram alterados.
 - `data/processed` recebe somente saídas geradas por código e ainda não contém decisões de features ou de modelagem.
-- `data/features` ficará vazia até que o horizonte e a disponibilidade temporal sejam definidos.
+- `data/features` permanecerá vazia até que o horizonte e a disponibilidade temporal sejam definidos; os pilotos atuais usam somente lags do alvo, construídos em memória.
 
 As bases brutas não serão publicadas no Git por enquanto. A decisão será revista quando a fonte, a licença ou a permissão de redistribuição de cada uma forem documentadas. O requisito de entrega poderá ser atendido por bases redistribuíveis ou por referências claras às fontes, conforme aplicável.
 
@@ -33,10 +33,10 @@ As bases brutas não serão publicadas no Git por enquanto. A decisão será rev
 
 | Base | Chave temporal | Alvo de trabalho proposto | Situação |
 | --- | --- | --- | --- |
-| 1 | `Date` | `Close` | Série provavelmente de Bitcoin; fonte primária e unidade ainda pendentes. |
-| 2 | `date_time` | `traffic_volume` | Fonte e unidades confirmadas; a agregação das variáveis externas repetidas continua pendente. |
-| 3 | `year`, `month`, `day`, `hour` | `PM2.5` | Fonte e unidades confirmadas; política de ausências permanece pendente. |
-| 4 | `Date Time` | `T (degC)` | Fonte e unidades confirmadas; há proposta de média horária aguardando aprovação. |
-| 5 | `DATE` | `GOLD_PRICE` | Taxas compatíveis com fontes FRED; a fonte e unidade do ouro e a definição de `TARGET` continuam pendentes. |
+| 1 | `Date` | `Close` | Fonte designada: Bitget; diária; divisão temporal 70% / 30%; semente 42. |
+| 2 | `date_time` | `traffic_volume` | Fonte confirmada: UCI; horária; divisão 80% / 20%; semente 67. A agregação das externas repetidas será documentada antes das features. |
+| 3 | `year`, `month`, `day`, `hour` | `PM2.5` | Fonte confirmada: UCI; horária; divisão 80% / 20%; semente 42. Ausências do alvo permanecem ausências. |
+| 4 | `Date Time` | `T (degC)` | Fonte designada: Kaggle; média horária de leituras válidas; divisão 80% / 20%; semente 42. |
+| 5 | `DATE` | `GOLD_PRICE` | Fonte adaptada e tratamento designados; semanal `W-FRI` pelo último preço observado; divisão 75% / 25%; semente 42. `TARGET` permanece excluído. |
 
 O script `scripts/prepare_structural_data.py` implementa somente as decisões estruturais já aprovadas nesta página. Ele não escolhe features, não imputa ausências e não realiza qualquer ajuste de modelo.

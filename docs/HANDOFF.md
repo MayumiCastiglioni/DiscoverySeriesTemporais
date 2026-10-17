@@ -3,10 +3,10 @@
 ## Estado atual
 
 - **Data:** 17/10/2026
-- **Fase:** Fase 1 - ingestão, congelamento e qualidade dos dados; exploração e infraestrutura temporal iniciadas.
-- **Situação:** em andamento. As cinco bases foram recebidas, a preparação estrutural e os notebooks iniciais foram executados. Ainda não há avaliação final nem modelo comparado por MAE.
+- **Fase:** Fase 1 - ingestão, congelamento, regras por base e pilotos de infraestrutura concluídos; features e avaliação final pendentes.
+- **Situação:** em andamento. As cinco bases foram recebidas, a preparação estrutural, as regras específicas e os notebooks 01–05 foram executados. Ainda não há avaliação final nem modelo comparado por MAE.
 - **Repositório local:** criado a partir de `MayumiCastiglioni/DiscoverySeriesTemporais`, originalmente vazio.
-- **Git:** esta continuação parte do commit `b0f05bf` no branch `main`. Para o commit atualmente publicado, consultar `git log --oneline -1`.
+- **Git:** o último estado publicado antes desta continuação foi `ce3c9c4` no branch `main`. Para o commit atualmente publicado, consultar `git log --oneline -1`.
 - **Descrição do repositório:** atualizada para refletir a comparação reprodutível de modelos com validação walk-forward.
 
 ## O que foi preparado
@@ -22,7 +22,10 @@
 - Protocolo de avaliação proposto, ainda não aprovado, em `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md`.
 - XGBoost definido como modelo de especialização, com documentação e piloto de uma origem por base em `docs/MODELO_XGBOOST.md` e `notebooks/02_origens_e_xgboost_piloto.ipynb`.
 - Agenda de origens compartilhadas implementada em `src/discovery_series_temporais/series.py`, testada contra divergências e explicada em `docs/WALK_FORWARD_IMPLEMENTADO.md`.
-- `notebooks/01_auditoria_e_stl_preliminar.ipynb` e `notebooks/02_origens_e_xgboost_piloto.ipynb` executados em kernel limpo, sem erro. A STL foi feita somente na Base 1; o XGBoost é piloto, não resultado final.
+- Configuração por base em `configs/base_experiment_rules.json`: granularidade, corte temporal e semente foram fornecidos pelo grupo e são lidos pelos adaptadores.
+- Transformações confirmadas: Base 4 por média horária válida; Base 5 por último preço semanal em sexta-feira; Base 2 consolida o alvo depois de comprovar que as repetições não divergem.
+- Adaptadores-piloto de SARIMAX, Holt-Winters, Random Forest e XGBoost em `src/discovery_series_temporais/model_pilots.py`. Os quatro foram executados em uma origem comum por base; o artefato ignorado pelo Git é `reports/generated/model_pilots/shared_origin_model_pilots.csv`.
+- `notebooks/01_auditoria_e_stl_preliminar.ipynb` a `05_avaliacao_walk_forward_final.ipynb` executados em kernel limpo, sem erro. A STL foi feita somente na Base 1; todos os modelos permanecem pilotos, não resultados finais.
 
 ## Requisitos confirmados do enunciado
 
@@ -34,15 +37,14 @@
 
 ## Itens deliberadamente pendentes
 
-1. Fonte original, unidade e permissão de redistribuição da Base 1; fonte, unidade e formação de `GOLD_PRICE` na Base 5.
-2. Aprovação ou revisão das frequências, horizonte e recorte temporal propostos no protocolo rascunhado.
-3. Regra de agregação das variáveis externas na Base 2 e confirmação da média horária na Base 4.
-4. Catálogo definitivo de disponibilidade temporal, em especial taxas da Base 5 e medições meteorológicas/ambientais.
-6. Material de divisão e registro de demandas, que a usuária informou que fornecerá separadamente.
+1. Horizonte final de previsão, comum ou por base. Até receber essa decisão, `h = 1` é apenas piloto e não deve gerar MAE ou ranking.
+2. Catálogo definitivo de disponibilidade temporal das variáveis externas, incluindo a agregação por tipo na Base 2.
+3. Unidade de `GOLD_PRICE` e licenças/permissões de redistribuição das Bases 1, 4 e 5.
+4. Material de divisão e registro de demandas, que a usuária informou que fornecerá separadamente.
 
 ## Próximo passo seguro
 
-Após a aprovação das decisões pendentes, criar a configuração versionada por base, reconstruir a agenda de origens a partir da interseção das features aprovadas e executar o walk-forward final. Só então gerar MAE, ranking, resíduos e interpretação comparativa.
+Após receber o horizonte e o catálogo de externas, criar a matriz de features, reconstruir a agenda pela interseção de linhas elegíveis e executar a busca temporal interna. Só então executar o walk-forward final, gerar MAE, ranking, resíduos e interpretação comparativa.
 
 ## Retomada rápida
 

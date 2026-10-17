@@ -6,11 +6,11 @@ Este registro distingue a origem confirmada de uma identificação apenas prová
 
 | Base | Situação | Fonte ou evidência | Consequência operacional |
 | --- | --- | --- | --- |
-| 1 | Identidade provável; origem original pendente | Os valores e o formato são compatíveis com uma série diária histórica de Bitcoin. Há uma referência pública com linhas coincidentes, mas ela não comprova a fonte original nem a licença. | Tratar `Close` como alvo candidato em unidade monetária não confirmada. Não publicar a cópia nem apresentar a procedência como fechada. |
+| 1 | Fonte designada pelo grupo | [Bitget — histórico de Bitcoin](https://www.bitget.com/price/bitcoin/historical-data), informado pelo grupo. A página disponibiliza histórico diário com abertura, máxima, mínima, fechamento e volume. | Tratar `Close` como alvo diário. A cópia congelada continua sendo a entrada experimental e não será redistribuída sem confirmar a licença aplicável. |
 | 2 | Confirmada | [UCI Machine Learning Repository — Metro Interstate Traffic Volume](https://archive.ics.uci.edu/dataset/492/metro+interstate+traffic+volume). O registro documenta o volume de tráfego na I-94 westbound, o período e as variáveis meteorológicas e de calendário. | Usar `traffic_volume` como alvo candidato horário. As unidades meteorológicas e a localidade podem ser descritas a partir da fonte, mas valores de tempo futuros continuam indisponíveis sem previsão. |
 | 3 | Confirmada | [UCI — Beijing Multi-Site Air Quality](https://doi.org/10.24432/C5RK5G). A estrutura, estação `Aotizhongxin` e período horário coincidem com a base fornecida. | Usar `PM2.5` como alvo candidato em microgramas por metro cúbico; confirmar a licença diretamente no registro antes de redistribuir. |
-| 4 | Confirmada | [Tutorial oficial de séries temporais do TensorFlow](https://www.tensorflow.org/tutorials/structured_data/time_series), que referencia os dados meteorológicos do Max Planck Institute, a cadência de 10 minutos e os sentinelas `-9999` do vento. | A unidade dos campos é a indicada no cabeçalho. A agregação horária ainda é uma decisão metodológica, não uma propriedade do arquivo bruto. |
-| 5 | Parcial | [FRED — DGS10](https://fred.stlouisfed.org/series/DGS10) e [FRED — DFF](https://fred.stlouisfed.org/series/DFF) confirmam as duas séries de taxas compatíveis com as colunas. A fonte, unidade e regra de formação de `GOLD_PRICE` não foram encontradas. | Não atribuir uma fonte única à base e não usar `TARGET` ou features pré-calculadas. Solicitar a planilha, o link ou a regra que gerou a série de ouro. |
+| 4 | Fonte designada pelo grupo e estrutura corroborada | [Kaggle — Weather Archive Jena](https://www.kaggle.com/datasets/pankrzysiu/weather-archive-jena), informado pelo grupo; [tutorial oficial do TensorFlow](https://www.tensorflow.org/tutorials/structured_data/time_series) corrobora a estrutura de 10 minutos e os sentinelas `-9999`. | A unidade dos campos é a indicada no cabeçalho. A regra aprovada é média horária de leituras válidas. |
+| 5 | Fonte e tratamento designados pelo grupo | [Base adaptada](https://github.com/TheoMGtech/pls-regration-comparation/tree/develop/bases/grupo5), [fonte diária original](https://github.com/dengyishuo/quantitative-finance/blob/master/gold.daily.prices.csv) e [tratamento](https://github.com/TheoMGtech/pls-regration-comparation/tree/develop/bases/grupo5-tratamento). | Trabalhar semanalmente pelo último preço observado até sexta-feira. Não usar `TARGET` ou features pré-calculadas. |
 
 ## Convenções de unidade documentadas
 
@@ -18,12 +18,8 @@ Este registro distingue a origem confirmada de uma identificação apenas prová
 - **Base 3:** poluentes (`PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3`) usam microgramas por metro cúbico; `TEMP` e `DEWP` usam graus Celsius; `PRES` usa hPa; `RAIN` usa mm; `WSPM` usa m/s. Essas unidades vêm da documentação do conjunto UCI e serão citadas no relatório final.
 - **Base 4:** as unidades já constam nos cabeçalhos e foram corroboradas pela fonte: temperatura em °C, pressão em mbar, umidade relativa em %, direção do vento em graus e velocidades de vento em m/s.
 
-## Pendências que exigem evidência do grupo
+## Pendências que exigem evidência adicional
 
-1. Link, planilha de origem ou licença da Base 1.
-2. Fonte e unidade de `GOLD_PRICE`, regra de construção da Base 5 e significado de `TARGET`.
+1. Licença aplicável às Bases 1, 4 e 5 antes de incluir qualquer bruto na entrega.
+2. Unidade de `GOLD_PRICE` e regra de construção do `TARGET` pré-calculado da Base 5, que seguirá excluído.
 3. Confirmação de que a licença de cada fonte permite incluir o arquivo bruto na entrega. Até lá, permanecem apenas cópias locais ignoradas pelo Git.
-
-## Referência pública de coincidência da Base 1
-
-A referência abaixo é mantida somente como evidência de identificação de conteúdo, não como citação da fonte original: [amostra pública de cotações históricas](https://gist.github.com/yasserius/61ebfe583cb6d5122c3ba23064441ac5). A origem primária e a licença continuam pendentes.

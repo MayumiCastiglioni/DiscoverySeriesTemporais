@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fase 1 em andamento; exploração descritiva e infraestrutura temporal iniciadas.** As cinco bases foram recebidas, congeladas localmente e auditadas. A procedência foi verificada até o limite da evidência disponível, o modelo de especialização foi definido como XGBoost e a infraestrutura de origens compartilhadas foi executada de modo provisório. O horizonte final e a divisão de responsabilidades permanecem pendentes.
+**Fase 1 em andamento; regras por grupo, infraestrutura temporal e pilotos dos quatro modelos concluídos.** As cinco bases foram recebidas, congeladas localmente e auditadas. Granularidade, divisão treino/teste e sementes foram registradas em configuração versionada. XGBoost é o modelo de especialização; SARIMAX, Holt-Winters, Random Forest e XGBoost executaram um piloto na mesma origem por base. O horizonte final e o catálogo de disponibilidade das variáveis externas permanecem pendentes.
 
 ## Objetivo
 
@@ -21,10 +21,10 @@ Por pedido explícito, este plano **não** divide demandas entre integrantes nem
 
 ## Decisões necessárias antes de codificar
 
-1. Quais são a fonte primária e a licença da Base 1, e a fonte, unidade e regra de construção de `GOLD_PRICE` na Base 5?
-2. Para cada base, o grupo aprova a frequência, o horizonte e o recorte de teste propostos no rascunho ou indicará alternativas?
-4. Quais variáveis externas são conhecidas antecipadamente, previstas na origem ou indisponíveis no futuro?
-5. Há requisito de linguagem, biblioteca, ambiente ou formato de relatório além do enunciado?
+1. Qual é o horizonte final de previsão, comum ou específico por base?
+2. Quais variáveis externas são conhecidas antecipadamente, previstas na origem ou indisponíveis no futuro?
+3. As licenças das fontes permitem incluir os arquivos brutos na entrega? Caso contrário, a entrega usará referências e instruções de obtenção.
+4. Qual é a unidade de `GOLD_PRICE`? A coluna pré-calculada `TARGET` permanecerá excluída.
 
 Enquanto essas decisões não forem registradas, o trabalho se limita a preparar a estrutura, sem simular dados ou resultados.
 
@@ -36,15 +36,17 @@ Enquanto essas decisões não forem registradas, o trabalho se limita a preparar
 - A preparação estrutural foi executada por `scripts/prepare_structural_data.py` e validada nas cinco saídas; ela não executa imputação, feature engineering, modelagem nem cálculo de resultados.
 - A exploração numérica dos alvos candidatos está registrada em `docs/EXPLORACAO_INICIAL.md` e pode ser reproduzida por `scripts/profile_candidate_series.py`.
 - A confirmação das fontes está registrada em `docs/FONTES_E_PROVENIENCIA.md`; as pendências das Bases 1 e 5 continuam abertas.
-- `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md` contém propostas de frequência, horizonte e validação para aprovação antes de serem transformadas em código.
+- `configs/base_experiment_rules.json` e `docs/REGRAS_POR_BASE.md` registram frequências, cortes e sementes fornecidos pelo grupo.
+- `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md` registra o protocolo já confirmado e a única decisão metodológica ainda necessária: o horizonte final.
 - O modelo de especialização é XGBoost e está documentado em `docs/MODELO_XGBOOST.md`.
 - A geração e checagem de origens walk-forward estão implementadas e explicadas em `docs/WALK_FORWARD_IMPLEMENTADO.md`; as agendas atuais são exploratórias, baseadas apenas no alvo.
+- Os notebooks `03_regras_e_preparacao_por_grupo.ipynb`, `04_pilotos_dos_quatro_modelos.ipynb` e `05_avaliacao_walk_forward_final.ipynb` foram criados para checar regras, exercitar os quatro adaptadores e impedir uma avaliação final prematura.
 
 ## Fases propostas
 
 ### 0. Contrato do experimento
 
-Registrar as cinco bases, o modelo de especialização, a unidade temporal, o horizonte, a regra de corte e o catálogo de disponibilidade das variáveis externas. Converter as decisões em uma configuração versionada por base.
+Registrar as cinco bases, o modelo de especialização, a unidade temporal, o horizonte, a regra de corte e o catálogo de disponibilidade das variáveis externas. Converter as decisões em uma configuração versionada por base. Granularidade, cortes e sementes já foram concluídos; falta o horizonte e o catálogo das externas.
 
 **Saída:** ficha de cada base e protocolo de avaliação aprovado.
 
@@ -87,7 +89,7 @@ Escrever uma narrativa técnica que explique decisões e resultados, em vez de a
 ## Critérios de aprovação para avançar
 
 - O escopo e as cinco bases foram confirmados.
-- O modelo de especialização e o horizonte foram informados.
+- O modelo de especialização, granularidade, corte temporal e sementes foram registrados; o horizonte final precisa ser informado.
 - O protocolo temporal impede vazamento e é comum aos modelos comparados.
 - Cada fase atende aos checks documentados antes de abrir a seguinte.
 - A análise de demandas permanece fora deste plano até a entrega separada do grupo.

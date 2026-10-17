@@ -7,7 +7,7 @@ Este dicionário descreve o que pode ser identificado pelos arquivos recebidos. 
 | Variável | Tipo | Descrição preliminar | Uso temporal previsto |
 | --- | --- | --- | --- |
 | `Date` | data | Chave temporal diária. | Índice temporal. |
-| `Open`, `High`, `Low`, `Close` | numérico | Valores de abertura, máximo, mínimo e fechamento de uma série identificada provavelmente como Bitcoin. A fonte original e a unidade ainda não estão confirmadas. | `Close` é alvo proposto. Os demais exigem defasagem ou regra comprovada de disponibilidade. |
+| `Open`, `High`, `Low`, `Close` | numérico | Valores de abertura, máximo, mínimo e fechamento da série de Bitcoin cuja fonte designada é Bitget. A unidade do arquivo ainda requer confirmação para a interpretação final. | `Close` é alvo confirmado. Os demais exigem defasagem ou regra comprovada de disponibilidade. |
 | `Adj Close` | numérico | Valor ajustado de fechamento. É idêntico a `Close` nas 2836 linhas recebidas. | Não usar como feature. Manter apenas no bruto para auditoria. |
 | `Volume` | numérico | Volume negociado. Unidade não informada no arquivo. | Usar apenas defasado, salvo prova de disponibilidade antecipada. |
 
@@ -47,8 +47,8 @@ Este dicionário descreve o que pode ser identificado pelos arquivos recebidos. 
 
 | Variável | Tipo | Descrição preliminar | Uso temporal previsto |
 | --- | --- | --- | --- |
-| `DATE` | data | Data de observação, com dias sem negociação. | Índice por dias observados de negociação. |
-| `GOLD_PRICE` | numérico | Preço do ouro. Unidade e fonte pendentes. | Alvo de trabalho proposto. |
+| `DATE` | data | Data de observação, com dias sem negociação. | Reamostrar em semanas encerradas na sexta-feira. |
+| `GOLD_PRICE` | numérico | Preço do ouro; a base adaptada, a fonte diária e o repositório de tratamento foram informados pelo grupo. A unidade permanece pendente. | Alvo semanal pelo último valor observado em cada semana. |
 | `TREASURY_10Y`, `FED_FUNDS_RATE` | numérico | Séries compatíveis com DGS10 e DFF do FRED; a correspondência do arquivo deve ser confirmada pelo grupo. | Definir defasagem ou publicação disponível na origem antes de usar. |
 | `DAY_OF_WEEK`, `MONTH`, `DOW_SIN`, `DOW_COS`, `MONTH_SIN`, `MONTH_COS` | numérico | Calendário e codificações já calculadas. | Recriar em código a partir de `DATE`; não confiar em versões pré-calculadas. |
 | `GOLD_LAG_1`, `GOLD_LAG_5`, `GOLD_LAG_20`, `GOLD_ROLLING_MEAN_5`, `GOLD_ROLLING_STD_5` | numérico | Lags e janelas já calculados. | Recriar dentro da pipeline sem usar o futuro. |
