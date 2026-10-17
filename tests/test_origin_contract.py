@@ -40,6 +40,12 @@ class OriginContractTests(unittest.TestCase):
         gaps = schedule["target_timestamp"] - schedule["origin_timestamp"]
         self.assertTrue(gaps.eq(pd.Timedelta(days=1)).all())
 
+    def test_multiple_steps_require_the_matching_calendar_delta(self) -> None:
+        schedule = build_origin_schedule(self.candidate, horizon_steps=2)
+        gaps = schedule["target_timestamp"] - schedule["origin_timestamp"]
+        self.assertTrue(gaps.eq(pd.Timedelta(days=2)).all())
+        self.assertTrue(schedule["horizon_steps"].eq(2).all())
+
 
 if __name__ == "__main__":
     unittest.main()

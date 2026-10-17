@@ -10,7 +10,7 @@ O módulo `src/discovery_series_temporais/series.py` cria uma agenda canônica d
 
 | Regra | Implementação atual |
 | --- | --- |
-| Horizonte | Uma etapa à frente (`h = 1`). |
+| Horizonte | O código aceita `h >= 1`; o piloto usa uma etapa à frente (`h = 1`) até que o grupo aprove o horizonte final. |
 | Teste final | Última fração de origens temporalmente válidas definida pelo grupo: 30%, 20%, 20%, 20% e 25% nas Bases 1–5. O tamanho é arredondado para cima. |
 | Janela de treino | Expansiva: toda a história anterior à origem. |
 | Agenda | Um CSV por base em `reports/generated/origin_schedules`, ignorado pelo Git por ser produto reexecutável. |
@@ -39,4 +39,4 @@ Os testes automatizados verificam tanto a aceitação de agendas iguais quanto a
 
 ## Limite da execução atual
 
-As agendas geradas agora são **provisórias e baseadas apenas no alvo**, com horizonte-piloto de uma etapa. Elas comprovam a infraestrutura temporal, a regra de lacunas e a igualdade de origens entre consumidores. Antes do resultado final, o grupo precisa registrar o horizonte e as agendas serão regeneradas a partir da interseção das features aprovadas para os quatro modelos. Assim, uma observação não será removida para apenas um modelo e a comparação continuará justa.
+As agendas geradas agora são **provisórias e baseadas apenas no alvo**, com horizonte-piloto de uma etapa. O notebook `05_avaliacao_walk_forward_final.ipynb` expõe `HORIZON_STEPS_BY_BASE` para mostrar o efeito de um horizonte candidato sobre as origens, sem calcular MAE. Antes do resultado final, o grupo precisa registrar e aprovar o horizonte; então as agendas serão regeneradas a partir da interseção das features aprovadas para os quatro modelos. Assim, uma observação não será removida para apenas um modelo e a comparação continuará justa.

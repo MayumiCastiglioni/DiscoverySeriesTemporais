@@ -26,6 +26,7 @@
 - Transformações confirmadas: Base 4 por média horária válida; Base 5 por último preço semanal em sexta-feira; Base 2 consolida o alvo depois de comprovar que as repetições não divergem.
 - Adaptadores-piloto de SARIMAX, Holt-Winters, Random Forest e XGBoost em `src/discovery_series_temporais/model_pilots.py`. Os quatro foram executados em uma origem comum por base; o artefato ignorado pelo Git é `reports/generated/model_pilots/shared_origin_model_pilots.csv`.
 - `notebooks/01_auditoria_e_stl_preliminar.ipynb` a `05_avaliacao_walk_forward_final.ipynb` executados em kernel limpo, sem erro. A STL foi feita somente na Base 1; todos os modelos permanecem pilotos, não resultados finais.
+- O notebook 05 aceita `HORIZON_STEPS_BY_BASE` para pré-visualizar as origens de um horizonte candidato sem liberar MAE; o guia `docs/EXECUCAO_MANUAL.md` registra a execução local segura.
 
 ## Requisitos confirmados do enunciado
 

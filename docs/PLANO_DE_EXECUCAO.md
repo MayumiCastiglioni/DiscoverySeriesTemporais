@@ -24,7 +24,7 @@ A configuração de granularidade, semente e divisão temporal foi registrada pa
 | `02_origens_e_xgboost_piloto.ipynb` | Agenda de origens e piloto de XGBoost. | Executável; não calcula MAE final. |
 | `03_regras_e_preparacao_por_grupo.ipynb` | Verifica configurações, granularidades e divisões específicas. | Executável. |
 | `04_pilotos_dos_quatro_modelos.ipynb` | Executa SARIMAX, Holt-Winters, Random Forest e XGBoost na mesma origem piloto. | Executável; não é comparação final. |
-| `05_avaliacao_walk_forward_final.ipynb` | Orquestra a avaliação final depois da definição de horizonte e features. | Preparado; bloqueia resultados finais enquanto essas decisões não existirem. |
+| `05_avaliacao_walk_forward_final.ipynb` | Mostra o efeito de `HORIZON_STEPS_BY_BASE` sobre as origens e orquestra a avaliação final depois da definição de horizonte e features. | Preparado; a prévia não gera MAE e a avaliação permanece bloqueada enquanto essas decisões não existirem. |
 
 ## Próxima decisão necessária
 

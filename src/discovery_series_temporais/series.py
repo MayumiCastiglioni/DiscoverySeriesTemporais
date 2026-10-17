@@ -166,13 +166,13 @@ def build_origin_schedule(
 ) -> pd.DataFrame:
     """Build the final-test origins once, before a model receives the schedule.
 
-    For regular daily/hourly targets, a one-step horizon also requires the
-    target timestamp to be exactly one calendar unit ahead. For Base 5, the
-    horizon is the next available trading observation. The optional eligibility
-    mask is the intersection of every approved model's required feature rows.
+    For regular daily/hourly targets, the target timestamp must be exactly the
+    selected number of calendar units ahead. For Base 5, each step is one
+    Friday-ended week. The optional eligibility mask is the intersection of
+    every approved model's required feature rows.
     """
-    if horizon_steps != 1:
-        raise ValueError("Only the proposed one-step horizon is implemented at this stage.")
+    if not isinstance(horizon_steps, int) or isinstance(horizon_steps, bool) or horizon_steps < 1:
+        raise ValueError("horizon_steps must be a positive integer.")
     if test_fraction is None:
         test_fraction = candidate.test_fraction
     if not 0 < test_fraction < 1:
@@ -185,7 +185,9 @@ def build_origin_schedule(
     valid = mask & target_available & next_target_available
 
     if candidate.required_horizon_delta is not None:
-        expected_target_time = frame["timestamp"] + candidate.required_horizon_delta
+        expected_target_time = frame["timestamp"] + (
+            candidate.required_horizon_delta * horizon_steps
+        )
         actual_target_time = frame["timestamp"].shift(-horizon_steps)
         valid &= actual_target_time.eq(expected_target_time)
 
@@ -227,9 +229,15 @@ def validate_origin_schedule(schedule: pd.DataFrame, candidate: CandidateTarget)
         raise ValueError("Every target position must be after its origin position.")
     if not (schedule["target_timestamp"] > schedule["origin_timestamp"]).all():
         raise ValueError("Every target timestamp must be after its origin timestamp.")
+    if schedule["horizon_steps"].nunique() != 1:
+        raise ValueError("A canonical schedule must contain exactly one horizon value.")
+    horizon_steps = int(schedule["horizon_steps"].iloc[0])
+    if horizon_steps < 1:
+        raise ValueError("A canonical schedule must have a positive horizon.")
     if candidate.required_horizon_delta is not None:
         delta = schedule["target_timestamp"] - schedule["origin_timestamp"]
-        if not delta.eq(candidate.required_horizon_delta).all():
+        expected_delta = candidate.required_horizon_delta * horizon_steps
+        if not delta.eq(expected_delta).all():
             raise ValueError("A regular-frequency schedule contains a nonconforming horizon.")
 
 
