@@ -3,10 +3,10 @@
 ## Estado atual
 
 - **Data:** 17/10/2026
-- **Fase:** Fase 1 - ingestão, congelamento e qualidade dos dados.
-- **Situação:** em andamento. As cinco bases foram recebidas e a preparação estrutural inicial foi executada.
+- **Fase:** Fase 1 - ingestão, congelamento e qualidade dos dados; exploração descritiva iniciada.
+- **Situação:** em andamento. As cinco bases foram recebidas, a preparação estrutural foi executada e os alvos candidatos foram perfilados sem modelagem.
 - **Repositório local:** criado a partir de `MayumiCastiglioni/DiscoverySeriesTemporais`, originalmente vazio.
-- **Git:** estrutura inicial publicada no branch `main` no commit `450284f`.
+- **Git:** esta continuação parte do commit `b0f05bf` no branch `main`. Para o commit atualmente publicado, consultar `git log --oneline -1`.
 - **Descrição do repositório:** atualizada para refletir a comparação reprodutível de modelos com validação walk-forward.
 
 ## O que foi preparado
@@ -17,6 +17,9 @@
 - `README.md` com uma apresentação concisa do repositório e links para a documentação inicial.
 - Cópias locais congeladas em `data/raw`, identificadas por checksum em `docs/DECISOES_DE_DADOS.md`.
 - Dicionário preliminar, auditoria inicial e rotina reproduzível de preparação estrutural.
+- Registro de fontes e proveniência: Bases 2, 3 e 4 confirmadas; Base 1 identificada apenas de forma provável; Base 5 confirmada apenas para as duas séries de taxa.
+- Perfil numérico reproduzível em `scripts/profile_candidate_series.py` e `docs/EXPLORACAO_INICIAL.md`.
+- Protocolo de avaliação proposto, ainda não aprovado, em `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md`.
 
 ## Requisitos confirmados do enunciado
 
@@ -28,16 +31,16 @@
 
 ## Itens deliberadamente pendentes
 
-1. Fontes, unidades e permissão de redistribuição das cinco bases.
+1. Fonte original, unidade e permissão de redistribuição da Base 1; fonte, unidade e formação de `GOLD_PRICE` na Base 5.
 2. Modelo de especialização do grupo.
-3. Horizonte, datas de origem e período de teste de cada base.
-4. Catálogo de disponibilidade temporal das variáveis externas.
-5. Regra de agregação da base 2, política de ausências da base 3 e regularização da base 4.
+3. Aprovação ou revisão das frequências, horizonte e recorte temporal propostos no protocolo rascunhado.
+4. Regra de agregação das variáveis externas na Base 2 e confirmação da média horária na Base 4.
+5. Catálogo definitivo de disponibilidade temporal, em especial taxas da Base 5 e medições meteorológicas/ambientais.
 6. Material de divisão e registro de demandas, que a usuária informou que fornecerá separadamente.
 
 ## Próximo passo seguro
 
-Registrar as decisões pendentes em uma ficha de experimento por base e, então, avançar para a exploração, STL e definição do protocolo walk-forward. Não criar dados sintéticos, resultados ou modelos antes disso.
+Após a aprovação das decisões pendentes, criar a configuração versionada por base e os checks de validação temporal. Só então gerar as saídas de modelagem, STL e gráficos. Não criar dados sintéticos, resultados ou modelos antes disso.
 
 ## Retomada rápida
 

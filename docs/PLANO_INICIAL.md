@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fase 1 em andamento.** As cinco bases foram recebidas, congeladas localmente e auditadas. Nenhum modelo, horizonte ou divisão de responsabilidades foi assumido.
+**Fase 1 em andamento; exploração descritiva iniciada.** As cinco bases foram recebidas, congeladas localmente e auditadas. A procedência foi verificada até o limite da evidência disponível e foi preparado um rascunho de protocolo. Nenhum modelo de especialização, horizonte final ou divisão de responsabilidades foi assumido.
 
 ## Objetivo
 
@@ -21,9 +21,9 @@ Por pedido explícito, este plano **não** divide demandas entre integrantes nem
 
 ## Decisões necessárias antes de codificar
 
-1. Quais são as cinco bases congeladas, suas fontes e os arquivos ou links de acesso?
+1. Quais são a fonte primária e a licença da Base 1, e a fonte, unidade e regra de construção de `GOLD_PRICE` na Base 5?
 2. Qual é o modelo de especialização designado ao grupo?
-3. Para cada base, qual é a frequência, o horizonte de previsão e a data ou período de teste?
+3. Para cada base, o grupo aprova a frequência, o horizonte e o recorte de teste propostos no rascunho ou indicará alternativas?
 4. Quais variáveis externas são conhecidas antecipadamente, previstas na origem ou indisponíveis no futuro?
 5. Há requisito de linguagem, biblioteca, ambiente ou formato de relatório além do enunciado?
 
@@ -35,6 +35,9 @@ Enquanto essas decisões não forem registradas, o trabalho se limita a preparar
 - As cinco entradas foram copiadas e verificadas por SHA-256, sem alteração dos arquivos recebidos.
 - O dicionário preliminar e a auditoria inicial estão em `docs/DICIONARIO_DE_VARIAVEIS.md` e `docs/AUDITORIA_INICIAL_DAS_BASES.md`.
 - A preparação estrutural foi executada por `scripts/prepare_structural_data.py` e validada nas cinco saídas; ela não executa imputação, feature engineering, modelagem nem cálculo de resultados.
+- A exploração numérica dos alvos candidatos está registrada em `docs/EXPLORACAO_INICIAL.md` e pode ser reproduzida por `scripts/profile_candidate_series.py`.
+- A confirmação das fontes está registrada em `docs/FONTES_E_PROVENIENCIA.md`; as pendências das Bases 1 e 5 continuam abertas.
+- `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md` contém propostas de frequência, horizonte e validação para aprovação antes de serem transformadas em código.
 
 ## Fases propostas
 

@@ -33,10 +33,10 @@ As bases brutas não serão publicadas no Git por enquanto. A decisão será rev
 
 | Base | Chave temporal | Alvo de trabalho proposto | Situação |
 | --- | --- | --- | --- |
-| 1 | `Date` | `Close` | Proposta pendente de confirmação da fonte e da unidade. |
-| 2 | `date_time` | `traffic_volume` | Proposta pronta para agregação horária após registrar a semântica das observações repetidas. |
-| 3 | `year`, `month`, `day`, `hour` | `PM2.5` | Proposta pendente de confirmação de unidade e política de ausências. |
-| 4 | `Date Time` | `T (degC)` | Proposta baseada no cabeçalho, pronta para tratamento estrutural. |
-| 5 | `DATE` | `GOLD_PRICE` | Proposta que evita usar o `TARGET` pré-calculado até verificar sua definição. |
+| 1 | `Date` | `Close` | Série provavelmente de Bitcoin; fonte primária e unidade ainda pendentes. |
+| 2 | `date_time` | `traffic_volume` | Fonte e unidades confirmadas; a agregação das variáveis externas repetidas continua pendente. |
+| 3 | `year`, `month`, `day`, `hour` | `PM2.5` | Fonte e unidades confirmadas; política de ausências permanece pendente. |
+| 4 | `Date Time` | `T (degC)` | Fonte e unidades confirmadas; há proposta de média horária aguardando aprovação. |
+| 5 | `DATE` | `GOLD_PRICE` | Taxas compatíveis com fontes FRED; a fonte e unidade do ouro e a definição de `TARGET` continuam pendentes. |
 
 O script `scripts/prepare_structural_data.py` implementa somente as decisões estruturais já aprovadas nesta página. Ele não escolhe features, não imputa ausências e não realiza qualquer ajuste de modelo.
