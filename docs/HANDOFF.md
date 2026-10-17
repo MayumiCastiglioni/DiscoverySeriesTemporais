@@ -6,6 +6,8 @@
 - **Fase:** preparação e planejamento inicial.
 - **Situação:** aguardando aprovação da usuária para iniciar a implementação.
 - **Repositório local:** criado a partir de `MayumiCastiglioni/DiscoverySeriesTemporais`, originalmente vazio.
+- **Git:** estrutura inicial publicada no branch `main` no commit `450284f`.
+- **Descrição do repositório:** atualizada para refletir a comparação reprodutível de modelos com validação walk-forward.
 
 ## O que foi preparado
 
