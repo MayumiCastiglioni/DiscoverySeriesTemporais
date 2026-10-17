@@ -41,13 +41,12 @@ O percentual de teste e o horizonte são escolhas iniciais para aprovação do g
 1. Não converter lacunas em observações artificiais. Em particular, não criar tráfego para a Base 2, não preencher `PM2.5` futuro e não inventar preço de ouro em dias sem negociação.
 2. Transformações numéricas, imputadores, escaladores e codificadores serão ajustados em cada janela de treino e aplicados à origem seguinte, nunca ao conjunto inteiro.
 3. Uma origem só é válida quando o histórico exigido pelas features existe e o alvo do horizonte está observado. A razão de exclusões será salva junto às previsões.
-4. Holt-Winters será univariado. SARIMAX, Random Forest e o modelo de especialização só receberão variáveis externas que estejam no catálogo como temporalmente permitidas.
+4. Holt-Winters será univariado. SARIMAX, Random Forest e XGBoost só receberão variáveis externas que estejam no catálogo como temporalmente permitidas.
 
 ## Condições para transformar este rascunho em configuração
 
 1. Aprovação explícita das cinco frequências e do horizonte, ou substituição por escolhas do enunciado.
-2. Identificação do modelo de especialização do grupo.
-3. Confirmação ou documentação das fontes pendentes das Bases 1 e 5.
-4. Para a Base 2, regra de agregação de cada variável externa e para a Base 4, concordância com a agregação horária.
+2. Confirmação ou documentação das fontes pendentes das Bases 1 e 5.
+3. Para a Base 2, regra de agregação de cada variável externa e para a Base 4, concordância com a agregação horária.
 
 Com essas decisões, a próxima mudança criará uma configuração versionada por base e os testes automáticos de validação temporal.

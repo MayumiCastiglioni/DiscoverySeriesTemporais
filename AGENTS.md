@@ -2,13 +2,13 @@
 
 ## Propósito do repositório
 
-Este repositório reúne uma análise comparativa, reproduzível e tecnicamente interpretável de séries temporais com variáveis externas. O escopo acadêmico inclui cinco bases congeladas, SARIMAX, Holt-Winters, Random Forest e um modelo de especialização ainda a ser informado pelo grupo.
+Este repositório reúne uma análise comparativa, reproduzível e tecnicamente interpretável de séries temporais com variáveis externas. O escopo acadêmico inclui cinco bases congeladas, SARIMAX, Holt-Winters, Random Forest e XGBoost como modelo de especialização definido pelo grupo.
 
 O planejamento aprovado é a fonte operacional de escopo. Antes de implementar uma etapa, consulte `docs/PLANO_INICIAL.md`; para critérios de qualidade, consulte `docs/RULES_E_CHECKS.md`.
 
 ## Limites de escopo
 
-- Não definir, presumir ou redistribuir integrantes, responsabilidades ou o modelo de especialização. Essas informações serão fornecidas separadamente.
+- Não definir, presumir ou redistribuir integrantes ou responsabilidades. Essas informações serão fornecidas separadamente.
 - Não inventar bases, fontes, frequência, horizonte, datas de origem ou regras de disponibilidade de variáveis externas. Registrar o que estiver pendente e solicitar a informação necessária.
 - Não incluir valores futuros observados em features, transformações, normalizações, ajuste de hiperparâmetros ou qualquer decisão tomada na data de origem da previsão.
 - Não admitir vazamento temporal em nenhuma fase da análise; em caso de dúvida sobre a disponibilidade de uma variável, excluí-la até que a regra esteja documentada.
@@ -33,12 +33,12 @@ Dados brutos congelados nunca devem ser alterados. Transformações devem gerar 
 2. Validar a integridade temporal antes de analisar: frequência, duplicidades, ausências, lacunas e outliers.
 3. Fazer STL e a interpretação de tendência, sazonalidade, resíduos e força sazonal por base.
 4. Construir features temporalmente válidas e remover apenas as linhas inevitavelmente incompletas, documentando a decisão.
-5. Definir uma mesma divisão temporal, horizonte, datas de origem e protocolo walk-forward para todos os modelos de uma base.
+5. Definir uma mesma divisão temporal, horizonte, datas de origem e protocolo walk-forward para todos os modelos de uma base. A agenda canônica de origens deve ser validada antes do MAE.
 6. Escolher hiperparâmetros sem consultar o teste final. Fixá-los antes da avaliação walk-forward final.
 7. Registrar parâmetros, ambiente, sementes, duração, previsões e resíduos de toda execução.
 8. Comparar modelos por MAE dentro de cada base; não agregar MAE entre bases de escalas diferentes.
 9. Avaliar resíduos fora da amostra, incluindo gráfico temporal, ACF e Ljung-Box, e interpretar as limitações.
-10. Produzir interpretação compatível para cada modelo e destacar o papel e a disponibilidade das variáveis externas.
+10. Produzir interpretação compatível para cada modelo e destacar o papel e a disponibilidade das variáveis externas, incluindo XGBoost.
 
 ## Qualidade e reprodutibilidade
 

@@ -11,6 +11,9 @@ Estas regras transformam os requisitos acadêmicos em verificações repetíveis
 5. **MAE por base.** É proibido somar ou tirar média de MAEs de bases em escalas diferentes. Comparar posição, vitórias e resultados dentro de cada base.
 6. **Rastreabilidade.** Toda tabela, gráfico, previsão e conclusão deve apontar para uma execução identificável, dados de origem e configuração.
 7. **Sem conclusões sem evidência.** Interpretações devem registrar métrica, gráfico, teste ou método que as sustente.
+8. **Modelo de especialização.** XGBoost é o quarto modelo obrigatório e só pode usar features temporalmente permitidas na origem.
+9. **Origens compartilhadas.** Para uma base, SARIMAX, Holt-Winters, Random Forest e XGBoost devem receber a mesma agenda canônica de origens, na mesma ordem. Uma diferença invalida a comparação até ser corrigida.
+10. **Notebooks reexecutáveis.** Todo notebook versionado deve executar a partir de um kernel limpo, chamar código reutilizável em `src` e deixar claro se seus artefatos são exploratórios ou finais.
 
 ## Check de entrada de dados
 
@@ -35,6 +38,8 @@ Estas regras transformam os requisitos acadêmicos em verificações repetíveis
 - [ ] A divisão respeita a ordem temporal e separa um teste final.
 - [ ] O walk-forward parte apenas do histórico disponível e atualiza o histórico entre origens.
 - [ ] Todos os modelos usam as mesmas origens e o mesmo horizonte na mesma base.
+- [ ] A checagem automatizada confirmou a igualdade da agenda de origens antes do cálculo de MAE.
+- [ ] XGBoost foi ajustado apenas com dados anteriores à origem e sua busca usou somente o período de treino.
 - [ ] Hiperparâmetros foram escolhidos sem consultar o teste final e o processo foi registrado.
 - [ ] SARIMAX considera ordens e sazonalidade; Holt-Winters considera componentes e período; Random Forest registra sua busca; o modelo de especialização documenta a busca apropriada.
 - [ ] Sementes, versões de bibliotecas, duração, parâmetros e identificador da execução foram registrados.

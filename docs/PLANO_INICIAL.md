@@ -2,18 +2,18 @@
 
 ## Status
 
-**Fase 1 em andamento; exploração descritiva iniciada.** As cinco bases foram recebidas, congeladas localmente e auditadas. A procedência foi verificada até o limite da evidência disponível e foi preparado um rascunho de protocolo. Nenhum modelo de especialização, horizonte final ou divisão de responsabilidades foi assumido.
+**Fase 1 em andamento; exploração descritiva e infraestrutura temporal iniciadas.** As cinco bases foram recebidas, congeladas localmente e auditadas. A procedência foi verificada até o limite da evidência disponível, o modelo de especialização foi definido como XGBoost e a infraestrutura de origens compartilhadas foi executada de modo provisório. O horizonte final e a divisão de responsabilidades permanecem pendentes.
 
 ## Objetivo
 
-Construir uma análise reprodutível que compare, em cinco séries temporais com variáveis externas, os modelos SARIMAX, Holt-Winters, Random Forest e o modelo de especialização do grupo. A avaliação final será feita por MAE em previsões fora da amostra geradas por validação walk-forward.
+Construir uma análise reprodutível que compare, em cinco séries temporais com variáveis externas, os modelos SARIMAX, Holt-Winters, Random Forest e XGBoost. A avaliação final será feita por MAE em previsões fora da amostra geradas por validação walk-forward.
 
 ## Escopo considerado
 
 - Documentação, exploração e congelamento das cinco bases.
 - Decomposição STL e interpretação de tendência, sazonalidade, resíduos e força sazonal.
 - Feature engineering sem vazamento temporal.
-- Otimização prévia e comparação justa dos quatro modelos em cada base.
+- Otimização prévia e comparação justa de SARIMAX, Holt-Winters, Random Forest e XGBoost em cada base.
 - Diagnóstico dos resíduos e interpretação de variáveis e modelos.
 - Relatório técnico em HTML paginado e PDF com o mesmo conteúdo, além dos arquivos necessários para reprodução.
 
@@ -22,8 +22,7 @@ Por pedido explícito, este plano **não** divide demandas entre integrantes nem
 ## Decisões necessárias antes de codificar
 
 1. Quais são a fonte primária e a licença da Base 1, e a fonte, unidade e regra de construção de `GOLD_PRICE` na Base 5?
-2. Qual é o modelo de especialização designado ao grupo?
-3. Para cada base, o grupo aprova a frequência, o horizonte e o recorte de teste propostos no rascunho ou indicará alternativas?
+2. Para cada base, o grupo aprova a frequência, o horizonte e o recorte de teste propostos no rascunho ou indicará alternativas?
 4. Quais variáveis externas são conhecidas antecipadamente, previstas na origem ou indisponíveis no futuro?
 5. Há requisito de linguagem, biblioteca, ambiente ou formato de relatório além do enunciado?
 
@@ -38,6 +37,8 @@ Enquanto essas decisões não forem registradas, o trabalho se limita a preparar
 - A exploração numérica dos alvos candidatos está registrada em `docs/EXPLORACAO_INICIAL.md` e pode ser reproduzida por `scripts/profile_candidate_series.py`.
 - A confirmação das fontes está registrada em `docs/FONTES_E_PROVENIENCIA.md`; as pendências das Bases 1 e 5 continuam abertas.
 - `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md` contém propostas de frequência, horizonte e validação para aprovação antes de serem transformadas em código.
+- O modelo de especialização é XGBoost e está documentado em `docs/MODELO_XGBOOST.md`.
+- A geração e checagem de origens walk-forward estão implementadas e explicadas em `docs/WALK_FORWARD_IMPLEMENTADO.md`; as agendas atuais são exploratórias, baseadas apenas no alvo.
 
 ## Fases propostas
 
@@ -67,7 +68,7 @@ Implementar lags, janelas móveis, calendário, codificação cíclica e variáv
 
 ### 4. Ajuste e treinamento dos modelos
 
-Ajustar SARIMAX, Holt-Winters, Random Forest e o modelo de especialização. Pesquisar e executar a otimização de hiperparâmetros usando apenas dados anteriores ao teste final. Fixar as configurações vencedoras antes da avaliação final.
+Ajustar SARIMAX, Holt-Winters, Random Forest e XGBoost. Pesquisar e executar a otimização de hiperparâmetros usando apenas dados anteriores ao teste final. Fixar as configurações vencedoras antes da avaliação final.
 
 **Saída:** configurações finais, registro do espaço de busca, justificativas e artefatos de treinamento.
 
