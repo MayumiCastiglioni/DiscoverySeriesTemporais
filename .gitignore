@@ -1,0 +1,12 @@
+# Copies of supplied data remain local until their source and redistribution terms are documented.
+/data/raw/*.csv
+
+# Derived data must be reproducible from the frozen inputs and project code.
+/data/processed/*.csv
+/data/features/*.csv
+/data/features/*.parquet
+
+# Local execution artifacts.
+/reports/generated/
+__pycache__/
+*.pyc

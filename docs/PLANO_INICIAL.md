@@ -2,7 +2,7 @@
 
 ## Status
 
-**Aguardando aprovação.** Nenhuma base, modelo de especialização, horizonte ou divisão de responsabilidades foi assumida ou implementada.
+**Fase 1 em andamento.** As cinco bases foram recebidas, congeladas localmente e auditadas. Nenhum modelo, horizonte ou divisão de responsabilidades foi assumido.
 
 ## Objetivo
 
@@ -28,6 +28,13 @@ Por pedido explícito, este plano **não** divide demandas entre integrantes nem
 5. Há requisito de linguagem, biblioteca, ambiente ou formato de relatório além do enunciado?
 
 Enquanto essas decisões não forem registradas, o trabalho se limita a preparar a estrutura, sem simular dados ou resultados.
+
+## Andamento registrado
+
+- A estrutura `data/raw`, `data/processed` e `data/features` foi adotada e documentada.
+- As cinco entradas foram copiadas e verificadas por SHA-256, sem alteração dos arquivos recebidos.
+- O dicionário preliminar e a auditoria inicial estão em `docs/DICIONARIO_DE_VARIAVEIS.md` e `docs/AUDITORIA_INICIAL_DAS_BASES.md`.
+- A preparação estrutural foi executada por `scripts/prepare_structural_data.py` e validada nas cinco saídas; ela não executa imputação, feature engineering, modelagem nem cálculo de resultados.
 
 ## Fases propostas
 
