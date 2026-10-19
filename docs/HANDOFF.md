@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-- **Data:** 17/10/2026
-- **Fase:** Fase 1 - ingestão, congelamento, tratamento, diagnósticos e pilotos de infraestrutura concluídos; features e avaliação final pendentes.
-- **Situação:** em andamento. As cinco bases receberam CSVs `cleaned`, ACF e STL; os 20 notebooks de treinamento individual também foram executados. Ainda não há avaliação final nem modelo comparado por MAE.
+- **Data:** 19/10/2026
+- **Fase:** Fase 1 - ingestão, congelamento, tratamento, diagnósticos, contrato de origens e infraestrutura comum de features concluídos; ajuste e avaliação final pendentes.
+- **Situação:** em andamento. As cinco bases receberam CSVs `cleaned`, ACF e STL; os 20 notebooks de treinamento individual também foram executados. A Base 2 agora preserva explicitamente as 11.976 horas ausentes em sua grade horária completa, sem imputação. Ainda não há avaliação final nem modelo comparado por MAE.
 - **Repositório local:** criado a partir de `MayumiCastiglioni/DiscoverySeriesTemporais`, originalmente vazio.
 - **Git:** o último estado publicado antes desta continuação foi `ce3c9c4` no branch `main`. Para o commit atualmente publicado, consultar `git log --oneline -1`.
 - **Descrição do repositório:** atualizada para refletir a comparação reprodutível de modelos com validação walk-forward.
@@ -29,6 +29,10 @@
 - O notebook 05 aceita `HORIZON_STEPS_BY_BASE` para pré-visualizar as origens de um horizonte candidato sem liberar MAE; o guia `docs/EXECUCAO_MANUAL.md` registra a execução local segura.
 - Cinco notebooks em `notebooks/bases` criam os CSVs `cleaned` e os diagnósticos ACF/STL. Para a Base 5, 254 lacunas são interpoladas somente em uma cópia diagnóstica da STL; os dados de modelagem preservam as lacunas.
 - Vinte notebooks em `notebooks/modelos` executaram individualmente SARIMAX, Holt-Winters, Random Forest e XGBoost em cada base. `scripts/verify_training_pilots.py` comprovou a origem comum para os quatro modelos de cada base.
+- `configs/final_horizon.json` registra e bloqueia a decisão pendente de horizonte, impedindo a produção indevida de MAE, ranking, resíduos ou relatório final.
+- `configs/feature_availability_policy.json`, `docs/CATALOGO_DE_DISPONIBILIDADE_EXTERNAS.md` e `src/discovery_series_temporais/features.py` entregam a matriz comum de features. Externas observadas entram apenas com defasagem de um período; calendário é calculado para o instante de previsão; ausências de features serão imputadas apenas dentro do treino de cada origem.
+- A máscara da agenda comum exige alvo na origem, alvo futuro, frequência regular e três alvos consecutivos até a origem — precondição técnica mínima do Holt-Winters, aplicada igualmente a todos. Em uma verificação estrutural com `h=1` apenas para teste de código, as cinco bases tiveram origens elegíveis: 2.833, 35.843, 33.534, 70.032 e 1.527, respectivamente. Isso não é resultado final nem aprova `h=1`.
+- `scripts/build_common_features.py` permite materializar e auditar, para um `--horizon` explicitamente informado, a matriz e seu metadado com hash da política antes de qualquer ajuste de modelo.
 
 ## Requisitos confirmados do enunciado
 
@@ -40,14 +44,14 @@
 
 ## Itens deliberadamente pendentes
 
-1. Horizonte final de previsão, comum ou por base. Até receber essa decisão, `h = 1` é apenas piloto e não deve gerar MAE ou ranking.
-2. Catálogo definitivo de disponibilidade temporal das variáveis externas, incluindo a agregação por tipo na Base 2.
+1. Horizonte final de previsão, comum ou por base. Até receber essa decisão, `h = 1` é apenas um teste estrutural/piloto e não deve gerar MAE ou ranking.
+2. Aprovação da política conservadora de disponibilidade temporal das variáveis externas ou fornecimento do calendário real de publicação/disponibilidade de cada variável. A política atual já exclui variáveis incertas.
 3. Unidade de `GOLD_PRICE` e licenças/permissões de redistribuição das Bases 1, 4 e 5.
 4. Material de divisão e registro de demandas, que a usuária informou que fornecerá separadamente.
 
 ## Próximo passo seguro
 
-Após receber o horizonte e o catálogo de externas, criar a matriz de features, reconstruir a agenda pela interseção de linhas elegíveis e executar a busca temporal interna. Só então executar o walk-forward final, gerar MAE, ranking, resíduos e interpretação comparativa.
+Após receber o horizonte e a aprovação do catálogo, materializar a matriz de features, reconstruir a agenda pela máscara comum já implementada e executar a busca temporal interna. Só então executar o walk-forward final, gerar MAE, ranking, resíduos e interpretação comparativa.
 
 ## Retomada rápida
 

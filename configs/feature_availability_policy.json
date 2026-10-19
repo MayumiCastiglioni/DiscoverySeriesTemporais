@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "policy": "Observed external values are used only with a one-period lag unless their advance availability is separately documented. Calendar features are calculated from the known target timestamp. Excluded variables are never passed to a model.",
+  "bases": [
+    {
+      "base_id": 1,
+      "numeric_lag_1": ["Open", "High", "Low", "Volume"],
+      "excluded": ["Adj Close"],
+      "notes": "Daily OHLCV fields are treated conservatively as observed only after the day closes."
+    },
+    {
+      "base_id": 2,
+      "numeric_lag_1": ["temp", "rain_1h", "snow_1h", "clouds_all"],
+      "excluded": ["holiday", "weather_main", "weather_description"],
+      "notes": "Observed weather is lagged. Holiday and weather categories stay excluded until their source and advance availability are formalized."
+    },
+    {
+      "base_id": 3,
+      "numeric_lag_1": ["PM10", "SO2", "NO2", "CO", "O3", "TEMP", "PRES", "DEWP", "RAIN", "WSPM"],
+      "excluded": ["wd", "station", "No", "year", "month", "day", "hour"],
+      "notes": "Environmental observations are available only as a prior-hour lag; calendar fields are rebuilt from the timestamp."
+    },
+    {
+      "base_id": 4,
+      "numeric_lag_1": ["p (mbar)", "Tpot (K)", "Tdew (degC)", "rh (%)", "VPmax (mbar)", "VPact (mbar)", "VPdef (mbar)", "sh (g/kg)", "H2OC (mmol/mol)", "rho (g/m**3)", "wv (m/s)", "max. wv (m/s)", "wind_direction_sin", "wind_direction_cos"],
+      "excluded": [],
+      "notes": "All meteorological observations are lagged by one hour."
+    },
+    {
+      "base_id": 5,
+      "numeric_lag_1": [],
+      "excluded": ["TREASURY_10Y", "FED_FUNDS_RATE"],
+      "notes": "Macro-rate publication timing is not documented, so the rates remain excluded until a conservative release-lag rule is approved."
+    }
+  ]
+}

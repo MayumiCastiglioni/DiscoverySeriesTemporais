@@ -46,6 +46,13 @@ class OriginContractTests(unittest.TestCase):
         self.assertTrue(gaps.eq(pd.Timedelta(days=2)).all())
         self.assertTrue(schedule["horizon_steps"].eq(2).all())
 
+    def test_test_period_is_cut_on_the_full_chronological_frame(self) -> None:
+        data = self.candidate.data.copy()
+        data.loc[15:17, "target"] = None
+        gapped = CandidateTarget(99, "synthetic_target", data, "daily", pd.Timedelta(days=1))
+        schedule = build_origin_schedule(gapped, test_fraction=0.20)
+        self.assertTrue((schedule["origin_position"] >= 16).all())
+
 
 if __name__ == "__main__":
     unittest.main()

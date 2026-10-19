@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fase 1 em andamento; regras por grupo, infraestrutura temporal e pilotos dos quatro modelos concluídos.** As cinco bases foram recebidas, congeladas localmente e auditadas. Granularidade, divisão treino/teste e sementes foram registradas em configuração versionada. XGBoost é o modelo de especialização; SARIMAX, Holt-Winters, Random Forest e XGBoost executaram um piloto na mesma origem por base. O horizonte final e o catálogo de disponibilidade das variáveis externas permanecem pendentes.
+**Fase 1 em andamento; regras por grupo, infraestrutura temporal e pilotos dos quatro modelos concluídos.** As cinco bases foram recebidas, congeladas localmente e auditadas. Granularidade, divisão treino/teste e sementes foram registradas em configuração versionada. XGBoost é o modelo de especialização; SARIMAX, Holt-Winters, Random Forest e XGBoost executaram um piloto na mesma origem por base. O horizonte final permanece pendente. O catálogo de variáveis externas agora possui uma política conservadora versionada, ainda dependente de aprovação do grupo quanto à disponibilidade real.
 
 ## Objetivo
 
@@ -38,6 +38,9 @@ Enquanto essas decisões não forem registradas, o trabalho se limita a preparar
 - A confirmação das fontes está registrada em `docs/FONTES_E_PROVENIENCIA.md`; as pendências das Bases 1 e 5 continuam abertas.
 - `configs/base_experiment_rules.json` e `docs/REGRAS_POR_BASE.md` registram frequências, cortes e sementes fornecidos pelo grupo.
 - `docs/PROTOCOLO_EXPERIMENTAL_RASCUNHO.md` registra o protocolo já confirmado e a única decisão metodológica ainda necessária: o horizonte final.
+- `configs/final_horizon.json` bloqueia explicitamente a execução final enquanto o grupo não registrar `h`; ACF e STL servem como evidência, mas não escolhem o objetivo de previsão automaticamente.
+- `configs/feature_availability_policy.json` e `docs/CATALOGO_DE_DISPONIBILIDADE_EXTERNAS.md` registram a política conservadora para externas, usada pela matriz comum de features.
+- `src/discovery_series_temporais/features.py` cria lags, janelas móveis e calendário sem vazamento, além da máscara de elegibilidade comum que será entregue aos quatro modelos.
 - O modelo de especialização é XGBoost e está documentado em `docs/MODELO_XGBOOST.md`.
 - A geração e checagem de origens walk-forward estão implementadas e explicadas em `docs/WALK_FORWARD_IMPLEMENTADO.md`; as agendas atuais são exploratórias, baseadas apenas no alvo.
 - Os notebooks `03_regras_e_preparacao_por_grupo.ipynb`, `04_pilotos_dos_quatro_modelos.ipynb` e `05_avaliacao_walk_forward_final.ipynb` foram criados para checar regras, exercitar os quatro adaptadores e impedir uma avaliação final prematura.

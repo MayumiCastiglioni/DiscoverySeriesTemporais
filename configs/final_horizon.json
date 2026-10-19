@@ -1,0 +1,7 @@
+{
+  "status": "pending_user_decision",
+  "decision_required": "Choose one positive integer number of steps ahead for each base, or explicitly approve a common positive integer. Until the values are approved, final tuning, walk-forward MAE, ranking, residual diagnostics and the final report are blocked.",
+  "horizon_steps_by_base": null,
+  "selection_evidence": "ACF and STL diagnostics are available for consultation, but they do not select a business forecasting horizon automatically.",
+  "last_updated": "2026-10-19"
+}

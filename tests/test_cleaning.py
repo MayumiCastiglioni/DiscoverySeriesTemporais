@@ -30,6 +30,24 @@ class CleaningTests(unittest.TestCase):
         self.assertEqual(cleaned.loc[0, "temp"], 281.0)
         self.assertEqual(cleaned.loc[0, "weather_main"], "Clear")
 
+    def test_base_2_preserves_a_missing_hour_as_a_missing_row(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "timestamp": pd.to_datetime(["2024-01-01 00:00", "2024-01-01 02:00"]),
+                "traffic_volume": [100, 200],
+                "temp": [280.0, 282.0],
+                "rain_1h": [0.0, 0.0],
+                "snow_1h": [0.0, 0.0],
+                "clouds_all": [40, 60],
+                "holiday": ["No holiday", "No holiday"],
+                "weather_main": ["Clear", "Clear"],
+                "weather_description": ["clear sky", "clear sky"],
+            }
+        )
+        cleaned, _ = _clean_base_2(frame)
+        self.assertEqual(list(cleaned["timestamp"]), list(pd.date_range("2024-01-01", periods=3, freq="h")))
+        self.assertTrue(pd.isna(cleaned.loc[1, "target"]))
+
     def test_diagnostic_segment_does_not_bridge_a_missing_target(self) -> None:
         timestamps = pd.date_range("2024-01-01", periods=30, freq="D")
         target = list(range(30))

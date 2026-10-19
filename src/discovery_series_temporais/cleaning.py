@@ -88,11 +88,21 @@ def _clean_base_2(frame: pd.DataFrame) -> tuple[pd.DataFrame, tuple[str, ...]]:
         cleaned[column] = grouped[column].agg(_deterministic_mode)
     cleaned["target"] = grouped["traffic_volume"].first()
     cleaned = cleaned.reset_index()
+    full_hourly_index = pd.date_range(
+        cleaned["timestamp"].min(), cleaned["timestamp"].max(), freq="h"
+    )
+    cleaned = (
+        cleaned.set_index("timestamp")
+        .reindex(full_hourly_index)
+        .rename_axis("timestamp")
+        .reset_index()
+    )
     cleaned = cleaned.loc[:, ["timestamp", "target", *numeric_columns, *categorical_columns]]
     return cleaned, (
         "verified that repeated traffic_volume values agree within each timestamp",
         "consolidated continuous external variables by arithmetic mean",
         "consolidated categorical external variables by deterministic mode with lexicographic tie-break",
+        "reindexed the observed series to its complete hourly grid without imputing gaps",
     )
 
 

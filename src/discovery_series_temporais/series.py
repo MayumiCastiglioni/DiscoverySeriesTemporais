@@ -231,11 +231,15 @@ def build_origin_schedule(
         actual_target_time = frame["timestamp"].shift(-horizon_steps)
         valid &= actual_target_time.eq(expected_target_time)
 
-    eligible_positions = np.flatnonzero(valid.to_numpy())
-    test_origin_count = int(np.ceil(len(eligible_positions) * test_fraction))
-    if test_origin_count < 1:
+    # The supplied split fraction describes the final chronological portion of
+    # the base, not a fraction of rows that happen to remain eligible after a
+    # missing-value or feature rule.  Eligibility may reduce this set, but it
+    # must never move the start of the final test period forward.
+    test_start_position = int(np.floor(len(frame) * (1 - test_fraction)))
+    in_final_test_period = pd.Series(frame.index >= test_start_position, index=frame.index)
+    selected_positions = np.flatnonzero((valid & in_final_test_period).to_numpy())
+    if len(selected_positions) < 1:
         raise ValueError(f"Base {candidate.base_id}: no valid final-test origin was found.")
-    selected_positions = eligible_positions[-test_origin_count:]
 
     schedule = pd.DataFrame(
         {
